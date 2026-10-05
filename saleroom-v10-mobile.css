@@ -1,0 +1,9 @@
+/* SaleRoom v10 mobile refinements from real iPhone screenshots */
+@media (min-width:371px) and (max-width:520px){
+  #sheet-overlay .grid2{grid-template-columns:1fr 1fr!important}
+  #sheet-overlay .grid2:has(input[type="date"]),
+  #sheet-overlay .grid2:has(input[type="datetime-local"]){grid-template-columns:1fr!important}
+}
+@media(max-width:370px){
+  #sheet-overlay .grid2,#sheet-overlay .check-grid{grid-template-columns:1fr!important}
+}
