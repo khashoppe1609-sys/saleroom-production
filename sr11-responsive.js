@@ -56,6 +56,27 @@ window.SR11=window.SR11||{};
     R.renderRoomPreview();
   };
 
+
+  R.pendingUrls=[];
+  R.clearPending=()=>{
+    for(const u of R.pendingUrls)try{URL.revokeObjectURL(u)}catch{}
+    R.pendingUrls=[];
+  };
+
+  R.previewExistingMedia=(files,host,kind='image')=>{
+    R.clearPending();
+    const list=[...(files||[])].filter(f=>kind==='video'?f.type?.startsWith('video/'):f.type?.startsWith('image/'));
+    if(!host||!list.length)return;
+    R.pendingUrls=list.slice(0,6).map(f=>URL.createObjectURL(f));
+    let box=host.querySelector('.pending-upload-preview');
+    if(!box){box=document.createElement('div');box.className='pending-upload-preview';host.appendChild(box)}
+    if(kind==='video'){
+      box.innerHTML='<b>Đang chuẩn bị upload</b><video src="'+R.pendingUrls[0]+'" muted playsinline controls></video>';
+    }else{
+      box.innerHTML='<b>Đang chuẩn bị upload '+list.length+' ảnh</b><div class="pending-upload-grid">'+R.pendingUrls.map((u,i)=>'<div><img src="'+u+'" alt="Ảnh đang chọn">'+(i===0?'<span>★ Đại diện</span>':'')+'</div>').join('')+'</div>';
+    }
+  };
+
   R.deviceMode=()=>{
     const width=Math.round(window.visualViewport?.width||window.innerWidth||390);
     const coarse=window.matchMedia?.('(pointer: coarse)')?.matches===true;
