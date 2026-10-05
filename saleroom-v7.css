@@ -33,3 +33,7 @@
   .media-list{grid-template-columns:repeat(3,minmax(0,1fr))}
   .video-list{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+.create-media-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 0 10px}
+.create-media-picker{display:flex;flex-direction:column;gap:4px;justify-content:center;min-height:76px;padding:11px;border:1px dashed #fb923c;border-radius:13px;background:#fff7ed;color:#9a3412;cursor:pointer}
+.create-media-picker b{font-size:12px}.create-media-picker span{font-size:9px;color:#8a7567}
+@media(max-width:380px){.create-media-grid{grid-template-columns:1fr}}
