@@ -102,7 +102,6 @@
     setNum('max_motorbike',g('Số xe','So xe','Motorbikes'));setText('washer_type',g('Máy giặt','May giat','Washer'));
     setText('pet_policy',g('Thú cưng','Thu cung','Pet'));
     const am=g('Tiện ích','Tien ich','Amenities');if(am!==null)p.amenities=String(am).split(/[\n,;]+/).map(x=>x.trim()).filter(Boolean);
-    const bal=g('Ban công','Ban cong','Balcony');if(bal!==null)p.has_balcony=S.bool(bal);
     const date=g('Ngày có phòng','Ngay co phong','Available date');if(date!==null)p.available_date=S.excelDate(date);
     const status=g('Trạng thái','Trang thai','Status');if(status!==null)p.status=S.status(status);
     setNum('contract_months',g('Hợp đồng tháng','Hop dong thang','Contract months'));
