@@ -283,3 +283,9 @@ body.sr-keyboard-open .fab{display:none!important}
   #sheet-overlay .grid2,
   #sheet-overlay .check-grid{grid-template-columns:1fr!important}
 }
+
+.filter-icon-btn{width:46px!important;min-width:46px!important;height:46px!important;padding:0!important;display:grid!important;place-items:center!important;color:#ea580c!important;background:#fff!important;border:1px solid #fed7aa!important;border-radius:14px!important}
+.filter-icon-btn svg{width:20px;height:20px}
+@media(max-width:560px){
+  .topbar .top-action{max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
