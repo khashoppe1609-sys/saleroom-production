@@ -1,5 +1,5 @@
-const CACHE='saleroom-render-v6';
-const CORE=['./','./index.html','./manifest.json','./icon.svg','./saleroom-v6.css?v=6.0','./sr6-ui.js?v=6.0'];
+const CACHE='saleroom-render-v7';
+const CORE=['./','./index.html','./manifest.json','./icon.svg','./saleroom-v6.css?v=6.0','./saleroom-v7.css?v=7.0','./sr6-ui.js?v=6.0','./sr7-media.js?v=7.0','./sr5-realtime.js?v=7.0','./sr5-backup.js?v=7.0'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(Promise.all([caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))),self.clients.claim()])));
 self.addEventListener('fetch',e=>{
