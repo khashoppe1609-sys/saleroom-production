@@ -79,6 +79,34 @@ window.SR6 = window.SR6 || {};
   };
 
 
+
+  let sr6BaseViewport=window.visualViewport?.height||window.innerHeight||700;
+  U.mobileViewportFix=function(){
+    const vv=window.visualViewport;
+    const h=Math.max(280,Math.round(vv?.height||window.innerHeight||700));
+    const top=Math.max(0,Math.round(vv?.offsetTop||0));
+    const full=Math.max(window.innerHeight||h,sr6BaseViewport||h);
+    const keyboard=(full-h)>130 || h<full*.78;
+    document.documentElement.style.setProperty('--sr-vv-height',h+'px');
+    document.documentElement.style.setProperty('--sr-vv-top',top+'px');
+    document.body.classList.toggle('sr-keyboard-open',keyboard);
+    if(!keyboard)sr6BaseViewport=Math.max(sr6BaseViewport,h);
+  };
+  window.visualViewport?.addEventListener('resize',U.mobileViewportFix);
+  window.visualViewport?.addEventListener('scroll',U.mobileViewportFix);
+  window.addEventListener('resize',U.mobileViewportFix,{passive:true});
+  document.addEventListener('focusin',e=>{
+    if(!e.target?.matches?.('input,select,textarea'))return;
+    setTimeout(()=>{
+      U.mobileViewportFix();
+      if(e.target.closest('#sheet-overlay')){
+        try{e.target.scrollIntoView({block:'center',inline:'nearest',behavior:'smooth'})}catch{e.target.scrollIntoView()}
+      }
+    },260);
+  },true);
+  document.addEventListener('focusout',()=>setTimeout(U.mobileViewportFix,180),true);
+  U.mobileViewportFix();
+
   U.mobileModalFix=function(){
     const open=!!document.getElementById('sheet-overlay');
     document.body.classList.toggle('sr-modal-open',open);
