@@ -56,8 +56,10 @@
 
       <h3 class="form-section-title">🖼 Ảnh & video phòng</h3>
       <div class="create-media-grid">
-        <label class="create-media-picker"><b>🖼 Chọn ảnh phòng</b><span id="r-images-count">Chưa chọn ảnh</span><input id="r-images" type="file" accept="image/*" multiple hidden></label>
-        <label class="create-media-picker"><b>🎬 Chọn video phòng</b><span id="r-video-count">Chưa chọn video</span><input id="r-video" type="file" accept="video/*" hidden></label>
+        <button class="create-media-picker" type="button" onclick="document.getElementById('r-images').click()"><b>🖼 Chọn ảnh phòng</b><span id="r-images-count">Chưa chọn ảnh</span></button>
+        <button class="create-media-picker" type="button" onclick="document.getElementById('r-video').click()"><b>🎬 Chọn video phòng</b><span id="r-video-count">Chưa chọn video</span></button>
+        <input id="r-images" type="file" accept="image/*" multiple hidden>
+        <input id="r-video" type="file" accept="video/*" hidden>
       </div>
       <div id="r-media-preview" class="create-media-preview" hidden></div>
       <div class="form-help">Ảnh đầu tiên bạn chọn sẽ là ảnh đại diện. Có thể đổi ảnh đại diện sau. Video luôn nằm sau toàn bộ ảnh và được nén mạnh trước khi upload.</div>
