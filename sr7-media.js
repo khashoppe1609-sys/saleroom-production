@@ -55,7 +55,7 @@ window.SR7 = window.SR7 || {};
     ctx.fillStyle='#fff';ctx.fillRect(0,0,nw,nh);ctx.drawImage(bitmap,0,0,nw,nh);bitmap.close?.();
     let blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',0.72));
     let ext='webp',type='image/webp';
-    if(!blob){
+    if(!blob||blob.type!=='image/webp'){
       blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.74));
       ext='jpg';type='image/jpeg';
     }
