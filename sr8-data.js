@@ -202,7 +202,7 @@
       const rows=data||[];
       for(const item of rows){
         const path=prefix?prefix+'/'+item.name:item.name;
-        if(item.id||item.metadata){
+        if(item.id){
           out.push({path,size:Number(item.metadata?.size||0),created_at:item.created_at||null});
         }else{
           out.push(...await O.listStorageRecursive(path));
