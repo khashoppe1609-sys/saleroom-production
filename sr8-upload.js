@@ -298,7 +298,7 @@ window.SR8 = window.SR8 || {};
     const sheet=document.querySelector('.sheet');if(!sheet)return;
     const upload=sheet.querySelector('.upload-box');
     if(upload){
-      upload.innerHTML='<div class="media-upload-actions"><label class="btn ghost media-upload-btn">🖼 Thêm ảnh<input type="file" accept="image/*" multiple hidden onchange="SR11.previewExistingMedia(this.files,this.closest(\'.upload-box\'),\'image\');requestAnimationFrame(()=>uploadRoomImages(\''+roomId+'\',this.files))"></label><label class="btn primary media-upload-btn">🎬 Thêm video<input type="file" accept="video/*" hidden onchange="SR11.previewExistingMedia(this.files,this.closest(\'.upload-box\'),\'video\');requestAnimationFrame(()=>uploadRoomVideo(\''+roomId+'\',this.files))"></label></div><small>Ảnh số 1 là đại diện. Có thể đổi thứ tự. Upload có % tiến trình và tự tiếp tục khi mạng gián đoạn.</small>';
+      upload.innerHTML='<div class="media-upload-actions"><label class="btn ghost media-upload-btn">🖼 Thêm ảnh<input type="file" accept="image/*" multiple hidden onchange="SR13.previewPendingMedia(this.files,this.closest(\'.upload-box\'),\'image\');requestAnimationFrame(()=>uploadRoomImages(\''+roomId+'\',this.files))"></label><label class="btn primary media-upload-btn">🎬 Thêm video<input type="file" accept="video/*" hidden onchange="SR13.previewPendingMedia(this.files,this.closest(\'.upload-box\'),\'video\');requestAnimationFrame(()=>uploadRoomVideo(\''+roomId+'\',this.files))"></label></div><small>Ảnh số 1 là đại diện. Có thể đổi thứ tự. Upload có % tiến trình và tự tiếp tục khi mạng gián đoạn.</small>';
     }
     sheet.querySelector('.room-media-manager')?.remove();
     const section=document.createElement('section');section.className='room-media-manager';
