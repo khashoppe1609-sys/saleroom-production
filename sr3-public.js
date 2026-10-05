@@ -52,3 +52,69 @@
   window.galleryTouchEnd=e=>{const x=e.changedTouches?.[0]?.clientX;if(S.gallery.touchX==null||x==null)return;const dx=x-S.gallery.touchX;if(Math.abs(dx)>45)galleryMove(dx<0?1:-1);S.gallery.touchX=null};
   document.addEventListener('keydown',e=>{if(!document.querySelector('#sr-full-gallery'))return;if(e.key==='ArrowRight')galleryMove(1);if(e.key==='ArrowLeft')galleryMove(-1);if(e.key==='Escape')closeFullscreenGallery()});
 })();
+/* v4 conditional public fields */
+(() => {
+  const oldCard = publicRoomCard;
+  publicRoomCard = function(r){
+    let h = oldCard(r);
+    h = h.replace('<span>📐 —m²</span>','')
+         .replace('<span>🚪 —</span>','')
+         .replace('<span>🌤️ Không ban công</span>','')
+         .replace('<span>🧺 —</span>','')
+         .replace('<div class="price">0 ₫</div>','')
+         .replace('<div class="price">0 đ</div>','');
+    return h;
+  };
+
+  const oldOpenPublicRoom = window.openPublicRoom;
+  window.openPublicRoom = function(roomId){
+    const r=(state.publicCatalog?.rooms||[]).find(x=>x.id===roomId);
+    oldOpenPublicRoom(roomId);
+    requestAnimationFrame(() => {
+      const sheet=document.querySelector('.sheet');
+      if(!sheet||!r) return;
+
+      sheet.querySelectorAll('.detail-box').forEach(box=>{
+        const v=(box.querySelector('span')?.textContent||'').trim();
+        if(!v || v==='—' || v==='0 đ' || v==='0 ₫' || v==='—m²') box.remove();
+      });
+      sheet.querySelectorAll('.cost-list > div').forEach(row=>{
+        const v=(row.querySelector('b')?.textContent||'').trim();
+        if(!v || v==='—') row.remove();
+      });
+      const costs=sheet.querySelector('.cost-list');
+      if(costs && !costs.children.length){
+        const head=costs.previousElementSibling;
+        if(head?.classList.contains('subhead')) head.remove();
+        costs.remove();
+      }
+
+      const gallery=sheet.querySelector('.public-detail-gallery');
+      if(r.description && !sheet.querySelector('.public-description')){
+        const d=document.createElement('div');
+        d.className='public-description';
+        d.textContent=r.description;
+        (gallery||sheet.querySelector('.sheet-head'))?.insertAdjacentElement('afterend',d);
+      }
+
+      const grid=sheet.querySelector('.detail-grid');
+      if(grid){
+        const extras=[
+          r.floor ? ['Tầng',r.floor] : null,
+          Number(r.max_people)>0 ? ['Số người','Tối đa '+r.max_people] : null,
+          Number(r.max_motorbike)>0 ? ['Số xe','Tối đa '+r.max_motorbike] : null,
+          r.furniture ? ['Nội thất',r.furniture] : null,
+          Number(r.contract_months)>0 ? ['Hợp đồng',r.contract_months+' tháng'] : null
+        ].filter(Boolean);
+        extras.forEach(([k,v])=>{
+          if([...grid.querySelectorAll('b')].some(b=>b.textContent===k)) return;
+          const el=document.createElement('div');
+          el.className='detail-box';
+          el.innerHTML='<b>'+esc(k)+'</b><span>'+esc(v)+'</span>';
+          grid.appendChild(el);
+        });
+        if(!grid.children.length) grid.remove();
+      }
+    });
+  };
+})();
