@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="/saleroom-v9-mobile.css?v=9.0" />
   <link rel="stylesheet" href="/saleroom-v10-mobile.css?v=10.0" />
   <link rel="stylesheet" href="/saleroom-v11-responsive.css?v=11.1" />
+  <link rel="stylesheet" href="/saleroom-v12-adaptive.css?v=12.0" />
 </head>
 <body>
   <div id="app"><div class="boot">Đang mở SaleRoom…</div></div>
@@ -59,9 +60,10 @@
   <script src="/sr8-data.js?v=8.1"></script>
   <script src="/sr9-mobile.js?v=9.0"></script>
   <script src="/sr11-responsive.js?v=11.1"></script>
+  <script src="/sr12-adaptive.js?v=12.0"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker-v9.js?v=11.1').catch(() => {}));
+      window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker-v9.js?v=12.0').catch(() => {}));
     }
   </script>
 </body>
