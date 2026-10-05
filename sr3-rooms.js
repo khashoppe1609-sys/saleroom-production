@@ -30,7 +30,7 @@
     showSheet(`<div class="sheet-handle"></div><div class="sheet-head"><div><div class="eyebrow">KHO PHÒNG</div><h2>Thêm phòng</h2><p>Nhập thông tin phòng thực tế · mã nội bộ được tạo tự động</p></div><button onclick="closeSheet()">✕</button></div>
       <h3 class="form-section-title">📍 Vị trí & nhận diện</h3>
       <div class="field"><label>Khu vực *</label><div class="inline-field"><select id="r-area">${state.areas.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select><button class="mini-add" type="button" onclick="newArea()">+ Khu vực</button></div></div>
-      <div class="grid2"><div class="field"><label>Tên phòng / tiêu đề</label><input id="rtitle" placeholder="Ví dụ: Studio ban công đẹp"></div><div class="field"><label>Số phòng</label><input id="rnum" placeholder="Ví dụ: P.302"></div></div>
+      <div class="grid2"><div class="field"><label>Tên phòng / tiêu đề</label><input id="rtitle" placeholder="Ví dụ: Studio full nội thất"></div><div class="field"><label>Số phòng</label><input id="rnum" placeholder="Ví dụ: P.302"></div></div>
       <div class="grid2"><div class="field"><label>Tầng</label><input id="rfloor" placeholder="Ví dụ: Tầng 3"></div><div class="field"><label>Loại phòng</label><input id="rtype" placeholder="Studio, 1PN, Duplex..."></div></div>
       <div class="field"><label>Mô tả gửi khách</label><textarea id="rdesc" placeholder="Mô tả điểm nổi bật của phòng, vị trí, ánh sáng, view..."></textarea></div>
 
