@@ -27,22 +27,48 @@
   newRoom=function(){
     if(!canManage()) return toast('Chỉ Manager/Admin được thêm phòng');
     if(!state.areas?.length) return newArea();
-    showSheet(`<div class="sheet-handle"></div><div class="sheet-head"><div><div class="eyebrow">KHO PHÒNG</div><h2>Thêm phòng</h2></div><button onclick="closeSheet()">✕</button></div>
-      <div class="field"><label>Khu vực *</label><div class="inline-field"><select id="r-area">${state.areas.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select><button class="mini-add" onclick="newArea()">+ Khu vực</button></div></div>
-      <div class="grid2"><div class="field"><label>Mã phòng *</label><input id="rcode" placeholder="Q7-302"></div><div class="field"><label>Số phòng</label><input id="rnum" placeholder="P.302"></div></div>
-      <div class="grid2"><div class="field"><label>Loại phòng</label><select id="rtype"><option>Studio</option><option>1PN</option><option>2PN</option><option>Duplex</option><option>Phòng trọ</option></select></div><div class="field"><label>Diện tích m²</label><input id="rarea" type="number" value="28"></div></div>
-      <div class="grid2"><div class="field"><label>Giá thuê</label><input id="rprice" type="number" value="5500000"></div><div class="field"><label>Tiền cọc</label><input id="rdeposit" type="number" value="5500000"></div></div>
-      <div class="grid2"><div class="field"><label>Ngày có phòng</label><input id="ravail" type="date" value="${todayISO()}"></div><div class="field"><label>Trạng thái</label><select id="rstatus"><option value="AVAILABLE">Trống</option><option value="COMING_SOON">Sắp trống</option><option value="MAINTENANCE">Đang sửa</option></select></div></div>
-      <div class="check-grid"><label class="check"><input id="rbal" type="checkbox"> Có ban công</label><label class="check"><input id="rpet" type="checkbox"> Cho thú cưng</label><label class="check"><input id="rwash" type="checkbox" checked> Máy giặt riêng</label></div>
-      <div class="field"><label>Ghi chú nội bộ</label><textarea id="rnote"></textarea></div>
+    showSheet(`<div class="sheet-handle"></div><div class="sheet-head"><div><div class="eyebrow">KHO PHÒNG</div><h2>Thêm phòng</h2><p>Nhập thông tin phòng thực tế · mã nội bộ được tạo tự động</p></div><button onclick="closeSheet()">✕</button></div>
+      <h3 class="form-section-title">📍 Vị trí & nhận diện</h3>
+      <div class="field"><label>Khu vực *</label><div class="inline-field"><select id="r-area">${state.areas.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select><button class="mini-add" type="button" onclick="newArea()">+ Khu vực</button></div></div>
+      <div class="grid2"><div class="field"><label>Tên phòng / tiêu đề</label><input id="rtitle" placeholder="Ví dụ: Studio ban công đẹp"></div><div class="field"><label>Số phòng</label><input id="rnum" placeholder="Ví dụ: P.302"></div></div>
+      <div class="grid2"><div class="field"><label>Tầng</label><input id="rfloor" placeholder="Ví dụ: Tầng 3"></div><div class="field"><label>Loại phòng</label><input id="rtype" placeholder="Studio, 1PN, Duplex..."></div></div>
+      <div class="field"><label>Mô tả gửi khách</label><textarea id="rdesc" placeholder="Mô tả điểm nổi bật của phòng, vị trí, ánh sáng, view..."></textarea></div>
+
+      <h3 class="form-section-title">💰 Giá & chi phí</h3>
+      <div class="grid2"><div class="field"><label>Giá thuê</label><input id="rprice" type="number" inputmode="numeric" placeholder="5500000"></div><div class="field"><label>Tiền cọc</label><input id="rdeposit" type="number" inputmode="numeric" placeholder="5500000"></div></div>
+      <div class="grid2"><div class="field"><label>Điện</label><input id="relectric" placeholder="Ví dụ: 4.000đ/kWh"></div><div class="field"><label>Nước</label><input id="rwater" placeholder="Ví dụ: 100.000đ/người"></div></div>
+      <div class="grid2"><div class="field"><label>Phí dịch vụ</label><input id="rservice" placeholder="Ví dụ: 200.000đ/phòng"></div><div class="field"><label>Phí gửi xe</label><input id="rparking" placeholder="Ví dụ: 150.000đ/xe"></div></div>
+      <div class="field"><label>Internet</label><input id="rinternet" placeholder="Ví dụ: Miễn phí hoặc 100.000đ/phòng"></div>
+
+      <h3 class="form-section-title">🏠 Thông tin phòng</h3>
+      <div class="grid2"><div class="field"><label>Diện tích m²</label><input id="rarea" type="number" step="0.1" inputmode="decimal" placeholder="28"></div><div class="field"><label>Nội thất</label><input id="rfurniture" placeholder="Ví dụ: Full nội thất"></div></div>
+      <div class="grid2"><div class="field"><label>Số người tối đa</label><input id="rpeople" type="number" inputmode="numeric" placeholder="2"></div><div class="field"><label>Số xe tối đa</label><input id="rbikes" type="number" inputmode="numeric" placeholder="2"></div></div>
+      <div class="grid2"><div class="field"><label>Máy giặt</label><input id="rwasher" placeholder="Riêng, chung, không có..."></div><div class="field"><label>Chính sách thú cưng</label><input id="rpetpolicy" placeholder="Cho mèo/chó nhỏ, không pet..."></div></div>
+      <div class="field"><label>Tiện ích</label><textarea id="ramenities" placeholder="Nhập tự do, ngăn cách bằng dấu phẩy hoặc xuống dòng&#10;Ví dụ: Máy lạnh, Tủ lạnh, Bếp, Khóa vân tay"></textarea></div>
+      <label class="check free-check"><input id="rbal" type="checkbox"> Có ban công</label>
+
+      <h3 class="form-section-title">📅 Trạng thái & hợp đồng</h3>
+      <div class="grid2"><div class="field"><label>Ngày có phòng</label><input id="ravail" type="date" value="${todayISO()}"></div><div class="field"><label>Trạng thái</label><select id="rstatus"><option value="AVAILABLE">Trống</option><option value="COMING_SOON">Sắp trống</option><option value="HOLD">Đang giữ</option><option value="DEPOSITED">Đã cọc</option><option value="RENTED">Đã thuê</option><option value="MAINTENANCE">Đang sửa</option></select></div></div>
+      <div class="field"><label>Thời hạn hợp đồng (tháng)</label><input id="rcontract" type="number" inputmode="numeric" placeholder="Ví dụ: 6 hoặc 12"></div>
+
+      <h3 class="form-section-title">💼 Thông tin nội bộ</h3>
+      <div class="grid2"><div class="field"><label>Hoa hồng</label><input id="rcommission" placeholder="Ví dụ: 50% tháng đầu / 3 triệu"></div><div class="field"><label>Thưởng thêm</label><input id="rbonus" type="number" inputmode="numeric" placeholder="0"></div></div>
+      <div class="field"><label>Ghi chú nội bộ</label><textarea id="rnote" placeholder="Thông tin chủ nhà, lưu ý dẫn khách, điều kiện đặc biệt..."></textarea></div>
+
+      <div class="form-help">Các ô không bắt buộc có thể để trống. Sau khi tạo phòng, bạn có thể mở phòng để upload ảnh.</div>
       <div class="sheet-actions"><button class="btn ghost" onclick="closeSheet()">Hủy</button><button class="btn primary" onclick="saveRoom()">Lưu phòng</button></div>`);
   };
 
   saveRoom=async function(){
-    const code=val('#rcode').trim(),areaId=val('#r-area');
-    if(!code) return toast('Nhập mã phòng');
+    const areaId=val('#r-area');
     if(!areaId) return toast('Chọn khu vực');
     const area=state.areas.find(a=>a.id===areaId); if(!area) return toast('Khu vực không hợp lệ');
+    const cleanList=(val('#ramenities')||'').split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);
+    const roomNumber=val('#rnum').trim();
+    const roomType=val('#rtype').trim();
+    const title=val('#rtitle').trim() || [roomType,roomNumber].filter(Boolean).join(' ') || 'Phòng cho thuê';
+    const autoId=(globalThis.crypto?.randomUUID?.()||uid()).replace(/-/g,'').slice(0,12).toUpperCase();
+    const code=`AUTO-${autoId}`;
     try{
       setLoading(true,'Đang lưu phòng…');
       let building=state.buildings.find(b=>b.code===S.compatCode(areaId));
@@ -50,7 +76,39 @@
         const {data,error}=await client.from('buildings').insert({organization_id:state.profile.organization_id,code:S.compatCode(areaId),name:area.name,address:area.name,city:area.city||'TP.HCM',district:area.name,amenities:[],created_by:state.profile.id}).select().single();
         if(error) throw error; building=data;
       }
-      const data={area_id:areaId,building_id:building.id,code,room_number:val('#rnum'),room_type:val('#rtype'),title:`${val('#rtype')} ${val('#rnum')}`.trim(),price:Number(val('#rprice')||0),deposit:Number(val('#rdeposit')||0),area:Number(val('#rarea')||0),status:val('#rstatus'),available_date:val('#ravail')||null,max_people:2,max_motorbike:2,furniture:'Full nội thất',amenities:[],pet_policy:checked('#rpet')?'Cho pet':'Không pet',has_balcony:checked('#rbal'),washer_type:checked('#rwash')?'Riêng':'Chung',internal_note:val('#rnote')};
+      const data={
+        area_id:areaId,
+        building_id:building.id,
+        code,
+        room_number:roomNumber||null,
+        floor:val('#rfloor').trim()||null,
+        room_type:roomType||null,
+        title,
+        description:val('#rdesc').trim()||null,
+        price:Number(val('#rprice')||0),
+        deposit:Number(val('#rdeposit')||0),
+        area:val('#rarea')?Number(val('#rarea')):null,
+        status:val('#rstatus'),
+        available_date:val('#ravail')||null,
+        max_people:val('#rpeople')?Number(val('#rpeople')):null,
+        max_motorbike:val('#rbikes')?Number(val('#rbikes')):null,
+        furniture:val('#rfurniture').trim()||null,
+        amenities:cleanList,
+        pet_policy:val('#rpetpolicy').trim()||null,
+        has_balcony:checked('#rbal'),
+        washer_type:val('#rwasher').trim()||null,
+        electric_price:val('#relectric').trim()||null,
+        water_price:val('#rwater').trim()||null,
+        service_fee:val('#rservice').trim()||null,
+        parking_fee:val('#rparking').trim()||null,
+        internet_fee:val('#rinternet').trim()||null,
+        contract_months:val('#rcontract')?Number(val('#rcontract')):null,
+        commission_type:null,
+        commission_value:null,
+        commission_note:val('#rcommission').trim()||null,
+        bonus:val('#rbonus')?Number(val('#rbonus')):0,
+        internal_note:val('#rnote').trim()||null
+      };
       const {error}=await client.from('rooms').insert({...data,organization_id:state.profile.organization_id,created_by:state.profile.id,updated_by:state.profile.id}); if(error) throw error;
       closeSheet(); state.tab='rooms'; await hydrate(); toast('Đã thêm phòng');
     }catch(e){toast(errMessage(e),4500)}finally{setLoading(false)}
