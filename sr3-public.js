@@ -118,3 +118,39 @@
     });
   };
 })();
+
+/* v4 public extra fields */
+(() => {
+  const prevOpenPublicRoomV4=window.openPublicRoom;
+  window.openPublicRoom=function(roomId){
+    prevOpenPublicRoomV4(roomId);
+    const r=(state.publicCatalog?.rooms||[]).find(x=>x.id===roomId);
+    if(!LIVE||!r) return;
+    client.rpc('get_public_room_extras',{p_token:state.publicCatalog.token,p_room_id:roomId}).then(({data,error})=>{
+      if(error||!data) return;
+      Object.assign(r,data);
+      const sheet=document.querySelector('.sheet');
+      const grid=sheet?.querySelector('.detail-grid');
+      if(!grid) return;
+      const extras=[
+        data.floor ? ['Tầng',data.floor] : null,
+        Number(data.max_motorbike)>0 ? ['Số xe','Tối đa '+data.max_motorbike] : null,
+        Number(data.contract_months)>0 ? ['Hợp đồng',data.contract_months+' tháng'] : null
+      ].filter(Boolean);
+      extras.forEach(([k,v])=>{
+        if([...grid.querySelectorAll('b')].some(b=>b.textContent===k)) return;
+        const el=document.createElement('div');
+        el.className='detail-box';
+        el.innerHTML='<b>'+esc(k)+'</b><span>'+esc(v)+'</span>';
+        grid.appendChild(el);
+      });
+    });
+  };
+
+  const prevPublicCardV4=publicRoomCard;
+  publicRoomCard=function(r){
+    let h=prevPublicCardV4(r);
+    if(!(Number(r.price)>0)) h=h.replace(/<div class="price">[^<]*<\/div>/,'');
+    return h;
+  };
+})();
