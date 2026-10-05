@@ -21,7 +21,7 @@ window.SR5 = window.SR5 || {};
 
   S.ensureRealtime=function(){
     if(!LIVE||!state.profile||S.channel) return;
-    const tables=['rooms','room_images','customers','customer_requirements','appointments','room_holds','commissions','catalog_feedback','customer_care_notes','areas'];
+    const tables=['rooms','room_images','room_videos','customers','customer_requirements','appointments','room_holds','commissions','catalog_feedback','customer_care_notes','areas'];
     let ch=client.channel('saleroom-v5-live');
     for(const table of tables){
       ch=ch.on('postgres_changes',{event:'*',schema:'public',table},()=>{
@@ -100,8 +100,11 @@ window.SR5 = window.SR5 || {};
     if(!confirm('Xóa vĩnh viễn phòng này và ảnh liên quan? Không thể khôi phục.'))return;
     try{
       setLoading(true,'Đang xóa vĩnh viễn…');
-      const {data:imgs}=await client.from('room_images').select('storage_path').eq('room_id',id);
-      const paths=(imgs||[]).map(x=>x.storage_path).filter(Boolean);
+      const [imgs,vids]=await Promise.all([
+        client.from('room_images').select('storage_path').eq('room_id',id),
+        client.from('room_videos').select('storage_path').eq('room_id',id)
+      ]);
+      const paths=[...(imgs.data||[]),...(vids.data||[])].map(x=>x.storage_path).filter(Boolean);
       if(paths.length)await client.storage.from('room-media').remove(paths);
       const {error}=await client.from('rooms').delete().eq('id',id);if(error)throw error;
       closeSheet();toast('Đã xóa vĩnh viễn phòng');
