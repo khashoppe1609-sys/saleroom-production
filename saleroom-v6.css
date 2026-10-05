@@ -205,3 +205,81 @@ body.loading #sr-sync-btn .sync-icon{animation:sr6spin .8s linear infinite}
   .nav-label{font-size:8px!important}
   .bottom-nav.modern-dock,.bottom-nav{gap:1px!important}
 }
+/* v10 iPhone sheet/modal hotfix for cached PWA shells */
+:root{--sr-vv-top:0px;--sr-vv-height:100dvh}
+body.sr-modal-open,body:has(#sheet-overlay){overflow:hidden!important}
+body.sr-modal-open .bottom-nav,
+body.sr-modal-open #sr-sync-btn,
+body.sr-modal-open .fab,
+body.sr-modal-open .selection-bar,
+body:has(#sheet-overlay) .bottom-nav,
+body:has(#sheet-overlay) #sr-sync-btn,
+body:has(#sheet-overlay) .fab,
+body:has(#sheet-overlay) .selection-bar{
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important
+}
+#sheet-overlay.overlay{
+  position:fixed!important;
+  left:0!important;right:0!important;
+  top:var(--sr-vv-top)!important;
+  bottom:auto!important;
+  height:var(--sr-vv-height)!important;
+  min-height:0!important;
+  z-index:9990!important;
+  overflow:hidden!important;
+  align-items:flex-end!important;
+  padding:0!important
+}
+#sheet-overlay .sheet{
+  width:min(560px,100%)!important;
+  max-width:100%!important;
+  max-height:calc(var(--sr-vv-height) - 4px)!important;
+  overflow:auto!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  padding-bottom:0!important
+}
+#sheet-overlay .sheet-head{
+  position:sticky!important;top:0!important;z-index:20!important;
+  background:rgba(255,255,255,.98)!important;
+  padding:4px 0 8px!important
+}
+#sheet-overlay .sheet-actions,
+#sheet-overlay .sticky-cta{
+  position:sticky!important;bottom:0!important;z-index:21!important;
+  background:rgba(255,255,255,.98)!important;
+  border-top:1px solid #ffedd5!important;
+  padding-bottom:calc(10px + env(safe-area-inset-bottom))!important
+}
+#sheet-overlay input,
+#sheet-overlay select,
+#sheet-overlay textarea{font-size:16px!important}
+#sheet-overlay .sheet-head button{width:44px!important;height:44px!important;min-width:44px!important}
+body.sr-keyboard-open #sheet-overlay{
+  align-items:stretch!important;
+  background:rgba(43,23,8,.2)!important
+}
+body.sr-keyboard-open #sheet-overlay .sheet{
+  height:100%!important;
+  max-height:100%!important;
+  border-radius:0!important;
+  padding-top:max(6px,env(safe-area-inset-top))!important
+}
+body.sr-keyboard-open #sheet-overlay .sheet-handle{display:none!important}
+body.sr-keyboard-open .bottom-nav,
+body.sr-keyboard-open #sr-sync-btn,
+body.sr-keyboard-open .fab{display:none!important}
+@media(max-width:520px){
+  #sheet-overlay .grid2:has(input[type="date"]),
+  #sheet-overlay .grid2:has(input[type="datetime-local"]){grid-template-columns:1fr!important}
+  #sheet-overlay .field{min-width:0!important}
+  #sheet-overlay .field input,
+  #sheet-overlay .field select,
+  #sheet-overlay .field textarea{width:100%!important;max-width:100%!important}
+}
+@media(max-width:360px){
+  #sheet-overlay .grid2,
+  #sheet-overlay .check-grid{grid-template-columns:1fr!important}
+}
