@@ -110,9 +110,9 @@ window.SR7 = window.SR7 || {};
       const canvas=document.createElement('canvas');canvas.width=nw;canvas.height=nh;
       const ctx=canvas.getContext('2d',{alpha:false});
       ctx.fillStyle='#000';ctx.fillRect(0,0,nw,nh);
-      const stream=canvas.captureStream(18);
+      const stream=canvas.captureStream(15);
       const mime=M.pickRecorderMime();
-      const opts={videoBitsPerSecond:360000};
+      const opts={videoBitsPerSecond:280000};
       if(mime)opts.mimeType=mime;
       let recorder;
       try{recorder=new MediaRecorder(stream,opts)}
