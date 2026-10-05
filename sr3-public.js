@@ -14,7 +14,7 @@
   };
 
   publicRoomCard=function(r){
-    const img=r.images?.[0];return `<article class="public-room clickable-room" onclick="openPublicRoom('${r.id}')"><div class="public-photo ${img?'has-image':''}" ${img?`style="background-image:url('${esc(img)}')"`:''}>${!img?'<span>🏠</span>':''}<div class="badges"><span class="badge available">TRỐNG</span></div>${r.images?.length?`<span class="photo-count">📷 ${r.images.length}</span>`:''}</div><div class="public-room-body"><div class="public-room-head"><div><h2>${esc(r.title||r.room_number||r.code)}</h2><p>📍 ${esc(r.building?.district||'')}</p></div><div class="price">${money(r.price)}</div></div><div class="public-facts"><span>📐 ${esc(r.area||'—')}m²</span><span>🚪 ${esc(r.room_type||'—')}</span><span>🌤️ ${r.has_balcony?'Ban công':'Không ban công'}</span><span>🧺 ${esc(r.washer_type||'—')}</span></div><div class="public-card-hint">Xem chi tiết phòng & ảnh →</div><div class="feedback-row"><button onclick="event.stopPropagation();catalogFeedback('${r.id}','INTERESTED',this)">♡ Quan tâm</button><button class="primary-lite" onclick="event.stopPropagation();requestViewing('${r.id}')">📅 Muốn xem</button><button onclick="event.stopPropagation();catalogFeedback('${r.id}','NOT_SUITABLE',this)">Không phù hợp</button></div></div></article>`;
+    const img=r.images?.[0];return `<article class="public-room clickable-room" onclick="openPublicRoom('${r.id}')"><div class="public-photo ${img?'has-image':''}" ${img?`style="background-image:url('${esc(img)}')"`:''}>${!img?'<span>🏠</span>':''}<div class="badges"><span class="badge available">TRỐNG</span></div>${r.images?.length?`<span class="photo-count">📷 ${r.images.length}</span>`:''}</div><div class="public-room-body"><div class="public-room-head"><div><h2>${esc(r.title||r.room_number||r.code)}</h2><p>📍 ${esc(r.building?.district||'')}</p></div><div class="price">${money(r.price)}</div></div><div class="public-facts"><span>📐 ${esc(r.area||'—')}m²</span><span>🚪 ${esc(r.room_type||'—')}</span><span>🧺 ${esc(r.washer_type||'—')}</span></div><div class="public-card-hint">Xem chi tiết phòng & ảnh →</div><div class="feedback-row"><button onclick="event.stopPropagation();catalogFeedback('${r.id}','INTERESTED',this)">♡ Quan tâm</button><button class="primary-lite" onclick="event.stopPropagation();requestViewing('${r.id}')">📅 Muốn xem</button><button onclick="event.stopPropagation();catalogFeedback('${r.id}','NOT_SUITABLE',this)">Không phù hợp</button></div></div></article>`;
   };
 
   window.openPublicRoom=function(roomId){
@@ -59,7 +59,6 @@
     let h = oldCard(r);
     h = h.replace('<span>📐 —m²</span>','')
          .replace('<span>🚪 —</span>','')
-         .replace('<span>🌤️ Không ban công</span>','')
          .replace('<span>🧺 —</span>','')
          .replace('<div class="price">0 ₫</div>','')
          .replace('<div class="price">0 đ</div>','');
