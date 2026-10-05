@@ -19,6 +19,7 @@ html{
 }
 body{
   width:100%;
+  min-height:100vh;
   min-height:100dvh;
   overflow-x:hidden;
   overscroll-behavior-y:none;
@@ -29,6 +30,7 @@ button,a,.area-chip,.tab,.nav-item,.mini-tool,.icon-btn,.btn{touch-action:manipu
 
 .app-shell{
   width:100%!important;
+  min-height:100vh!important;
   min-height:100dvh!important;
   padding-bottom:var(--sr-dock-space)!important;
   overflow-x:clip;
@@ -226,6 +228,7 @@ body.sr-keyboard-open .bottom-nav,
 body.sr-keyboard-open #sr-sync-btn,
 body.sr-keyboard-open .fab,
 body.sr-keyboard-open .selection-bar{visibility:hidden!important;pointer-events:none!important}
+body.sr-selection-active .fab{visibility:hidden!important;pointer-events:none!important}
 
 /* Cards and text containment */
 .room-card,.list-card,.appointment-card,.settings-card,.profile-card,.public-room{min-width:0}
@@ -236,7 +239,7 @@ body.sr-keyboard-open .selection-bar{visibility:hidden!important;pointer-events:
 .meta,.customer-need,.muted{overflow-wrap:anywhere}
 
 /* Public catalog */
-.public-shell{width:100%;min-height:100dvh;overflow-x:hidden}
+.public-shell{width:100%;min-height:100vh;min-height:100dvh;overflow-x:hidden}
 .public-header{
   top:0!important;
   padding:calc(9px + var(--sr-safe-top)) 12px 9px!important;
