@@ -167,3 +167,58 @@ window.SR3 = window.SR3 || {};
   new MutationObserver(ensureSyncButton).observe(document.getElementById('app'),{childList:true,subtree:true});
   setTimeout(ensureSyncButton,500);
 })();
+
+/* v4 admin clear operational data */
+(() => {
+  window.openClearDataSheet = function(){
+    if(state.profile?.role!=='admin') return toast('Chỉ Admin được dùng chức năng này');
+    showSheet(`<div class="sheet-handle"></div><div class="sheet-head"><div><div class="eyebrow">ADMIN</div><h2>Xóa trắng dữ liệu</h2></div><button onclick="closeSheet()">✕</button></div>
+      <div class="danger-note"><b>⚠️ Thao tác không thể hoàn tác.</b><br>Xóa phòng, ảnh, khu vực, khách hàng, lịch hẹn, catalog, giữ phòng, hoa hồng và lịch sử care. Tài khoản người dùng và tổ chức SaleRoom vẫn được giữ.</div>
+      <div class="field"><label>Nhập <b>XOA TRANG</b> để xác nhận</label><input id="clear-data-confirm" autocomplete="off" placeholder="XOA TRANG"></div>
+      <div class="sheet-actions"><button class="btn ghost" onclick="closeSheet()">Hủy</button><button class="btn danger-soft" onclick="runClearData()">🗑 XÓA TRẮNG DỮ LIỆU</button></div>`);
+  };
+
+  window.runClearData = async function(){
+    if(state.profile?.role!=='admin') return toast('Chỉ Admin được dùng chức năng này');
+    if(val('#clear-data-confirm').trim().toUpperCase()!=='XOA TRANG') return toast('Vui lòng nhập đúng XOA TRANG');
+    if(!confirm('Xác nhận lần cuối: xóa toàn bộ dữ liệu vận hành của SaleRoom?')) return;
+
+    const org=state.profile.organization_id;
+    try{
+      setLoading(true,'Đang xóa dữ liệu…');
+
+      const {data:imgs,error:imgErr}=await client.from('room_images').select('storage_path').eq('organization_id',org);
+      if(imgErr) throw imgErr;
+      const paths=(imgs||[]).map(x=>x.storage_path).filter(Boolean);
+      if(paths.length){
+        const {error:storageErr}=await client.storage.from('room-media').remove(paths);
+        if(storageErr) console.warn('Không xóa được một số file ảnh',storageErr);
+      }
+
+      const tables=['activity_logs','catalogs','appointments','room_holds','commissions','customers','rooms','buildings','areas'];
+      for(const table of tables){
+        const {error}=await client.from(table).delete().eq('organization_id',org);
+        if(error) throw new Error(table+': '+error.message);
+      }
+
+      closeSheet();
+      await syncData(true);
+      toast('Đã xóa trắng dữ liệu. Tài khoản vẫn được giữ.',5000);
+    }catch(e){
+      toast('Xóa trắng chưa hoàn tất: '+errMessage(e),6000);
+      await syncData(true);
+    }finally{
+      setLoading(false);
+    }
+  };
+
+  const prevProfileViewV4=profileView;
+  profileView=function(){
+    let html=prevProfileViewV4();
+    if(state.profile?.role==='admin'){
+      const block=`<section class="settings-card wipe-card"><h3>🧹 Xóa trắng dữ liệu</h3><p class="muted">Dùng khi muốn làm sạch toàn bộ dữ liệu vận hành và bắt đầu lại. Không xóa tài khoản.</p><button class="btn danger-soft full" onclick="openClearDataSheet()">XÓA TRẮNG DỮ LIỆU</button></section>`;
+      html=html.replace('</main>',block+'</main>');
+    }
+    return html;
+  };
+})();
