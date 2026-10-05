@@ -212,8 +212,10 @@ button,a,.area-chip,.tab,.nav-item,.mini-tool,.icon-btn,.btn{touch-action:manipu
   -webkit-backdrop-filter:blur(14px);
 }
 .sheet-actions .btn,.sticky-cta .btn{min-height:46px}
-.sheet .grid2{grid-template-columns:1fr!important}
 .sheet .check-grid{grid-template-columns:1fr 1fr!important}
+@media(max-width:520px){
+  .sheet .grid2{grid-template-columns:1fr!important}
+}
 
 /* Hide chrome controls while modal is open / keyboard is up */
 body.sr-modal-open .bottom-nav,
