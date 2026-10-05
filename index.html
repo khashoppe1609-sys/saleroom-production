@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://qvistojgyvnaqewiwxvv.supabase.co/storage/v1/object/public/saleroom-web/styles.css" />
   <link rel="stylesheet" href="/saleroom-orange.css?v=2" />
   <link rel="stylesheet" href="/saleroom-v3.css?v=5" />
+  <link rel="stylesheet" href="/saleroom-v5.css?v=5.1" />
 </head>
 <body>
   <div id="app"><div class="boot">Đang mở SaleRoom…</div></div>
@@ -23,6 +24,7 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://qvistojgyvnaqewiwxvv.supabase.co/storage/v1/object/public/saleroom-web/app.js"></script>
   <script src="/sr2-core.js?v=2"></script>
   <script src="/sr2-rooms.js?v=2"></script>
@@ -33,6 +35,12 @@
   <script src="/sr3-customers.js?v=3"></script>
   <script src="/sr3-public.js?v=5"></script>
   <script src="/sr3-home.js?v=3"></script>
+  <script src="/sr5-realtime.js?v=5.1"></script>
+  <script src="/sr5-edit.js?v=5.1"></script>
+  <script src="/sr5-excel.js?v=5.1"></script>
+  <script src="/sr5-backup.js?v=5.1"></script>
+  <script src="/sr5-media.js?v=5.1"></script>
+  <script src="/sr5-dashboard.js?v=5.1"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(() => {}));
