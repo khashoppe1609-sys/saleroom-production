@@ -18,7 +18,9 @@ window.SR9=window.SR9||{};
 
   M.updateModalState=()=>{
     const modal=!!document.querySelector('.overlay');
+    const selecting=!!document.querySelector('.selection-bar');
     document.body.classList.toggle('sr-modal-open',modal);
+    document.body.classList.toggle('sr-selection-active',selecting);
   };
 
   M.ensureFocusedVisible=e=>{
