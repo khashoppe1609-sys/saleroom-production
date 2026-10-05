@@ -57,8 +57,8 @@
   window.downloadRoomTemplate=function(){
     if(!window.XLSX)return toast('Thư viện Excel chưa tải xong');
     const rows=[
-      ['Khu vực','Tên phòng','Số phòng','Tầng','Loại phòng','Mô tả','Giá thuê','Tiền cọc','Điện','Nước','Dịch vụ','Gửi xe','Internet','Diện tích m2','Nội thất','Số người','Số xe','Máy giặt','Thú cưng','Tiện ích','Ban công','Ngày có phòng','Trạng thái','Hợp đồng tháng','Hoa hồng','Thưởng','Ghi chú nội bộ'],
-      ['Quận 7','Studio ban công','P.302','Tầng 3','Studio','Phòng sáng, full nội thất',5500000,5500000,'4.000đ/kWh','100.000đ/người','200.000đ/phòng','150.000đ/xe','Miễn phí',28,'Full nội thất',2,2,'Riêng','Cho mèo nhỏ','Máy lạnh, Tủ lạnh, Bếp','Có',todayISO(),'Trống',12,'50% tháng đầu',0,'']
+      ['Khu vực','Tên phòng','Số phòng','Tầng','Loại phòng','Mô tả','Giá thuê','Tiền cọc','Điện','Nước','Dịch vụ','Gửi xe','Internet','Diện tích m2','Nội thất','Số người','Số xe','Máy giặt','Thú cưng','Tiện ích','Ngày có phòng','Trạng thái','Hợp đồng tháng','Hoa hồng','Thưởng','Ghi chú nội bộ'],
+      ['Quận 7','Studio ban công','P.302','Tầng 3','Studio','Phòng sáng, full nội thất',5500000,5500000,'4.000đ/kWh','100.000đ/người','200.000đ/phòng','150.000đ/xe','Miễn phí',28,'Full nội thất',2,2,'Riêng','Cho mèo nhỏ','Máy lạnh, Tủ lạnh, Bếp',todayISO(),'Trống',12,'50% tháng đầu',0,'']
     ];
     const ws=XLSX.utils.aoa_to_sheet(rows);
     ws['!cols']=rows[0].map((x,i)=>({wch:Math.min(28,Math.max(12,String(x).length+4))}));
@@ -108,7 +108,7 @@
           max_people:S.num(R.get('Số người','So nguoi','People')),max_motorbike:S.num(R.get('Số xe','So xe','Motorbikes')),
           washer_type:R.get('Máy giặt','May giat','Washer')?String(R.get('Máy giặt','May giat','Washer')):null,
           pet_policy:R.get('Thú cưng','Thu cung','Pet')?String(R.get('Thú cưng','Thu cung','Pet')):null,
-          amenities,has_balcony:S.bool(R.get('Ban công','Ban cong','Balcony')),
+          amenities,
           available_date:S.excelDate(R.get('Ngày có phòng','Ngay co phong','Available date')),
           status:S.status(R.get('Trạng thái','Trang thai','Status')),
           contract_months:S.num(R.get('Hợp đồng tháng','Hop dong thang','Contract months')),
@@ -133,7 +133,7 @@
       'Tên khách':c.name,'SĐT':c.phone,'Zalo':c.zalo||'','Nguồn':c.source||'','Trạng thái':c.status||'',
       'Khu vực':(r.districts||[]).join(', '),'Ngân sách từ':r.min_price||'','Ngân sách đến':r.max_price||'',
       'Ngày vào':r.move_in||'','Số người':r.people||'','Số xe':r.bikes||'','Có pet':r.has_pet?'Có':'',
-      'Cần ban công':r.need_balcony?'Có':'','Máy giặt riêng':r.need_private_washer?'Có':'',
+'Máy giặt riêng':r.need_private_washer?'Có':'',
       'Loại phòng':(r.room_types||[]).join(', '),'Yêu cầu':(r.must_have||[]).join(', '),
       'Lịch care tiếp theo':c.next_follow_up_at?new Date(c.next_follow_up_at).toLocaleString('vi-VN'):'',
       'Nội dung follow':c.follow_up_note||'','Ghi chú':c.note||''
