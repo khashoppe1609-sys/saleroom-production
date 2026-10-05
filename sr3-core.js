@@ -118,3 +118,52 @@ window.SR3 = window.SR3 || {};
   setTimeout(async()=>{if(state.profile){await S.loadExtras();render()}},500);
   setTimeout(async()=>{if(state.profile && !state.areas.length){await S.loadExtras();render()}},1600);
 })();
+/* v4 cross-device sync */
+(() => {
+  let syncing=false,lastAuto=0;
+
+  window.syncData = async function(silent=false){
+    if(!LIVE || !state.profile || syncing) return;
+    syncing=true;
+    try{
+      if(!silent) setLoading(true,'Đang đồng bộ dữ liệu…');
+      await hydrate();
+      state.lastSyncedAt=new Date().toISOString();
+      if(!silent) toast('Đã đồng bộ dữ liệu mới nhất');
+    }catch(e){
+      if(!silent) toast(errMessage(e),4000);
+    }finally{
+      syncing=false;
+      if(!silent) setLoading(false);
+    }
+  };
+
+  function ensureSyncButton(){
+    const isPublic=new URLSearchParams(location.search).has('catalog');
+    let btn=document.getElementById('sr-sync-btn');
+    if(isPublic || !state.profile){
+      btn?.remove();
+      return;
+    }
+    if(!btn){
+      btn=document.createElement('button');
+      btn.id='sr-sync-btn';
+      btn.className='sync-floating';
+      btn.innerHTML='↻ <span>Đồng bộ</span>';
+      btn.onclick=()=>syncData(false);
+      document.body.appendChild(btn);
+    }
+  }
+
+  async function autoSync(){
+    const now=Date.now();
+    if(now-lastAuto<2500 || document.hidden || !state.profile) return;
+    lastAuto=now;
+    await syncData(true);
+  }
+
+  window.addEventListener('focus',autoSync);
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) autoSync(); });
+  new MutationObserver(ensureSyncButton).observe(document.getElementById('app'),{childList:true,subtree:true});
+  setTimeout(ensureSyncButton,500);
+})();
