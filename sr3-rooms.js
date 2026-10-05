@@ -11,12 +11,12 @@
       return `<section class="area-section"><div class="area-heading"><div><span class="area-pin">📍</span><div><b>${esc(d)}</b><small>${available} phòng trống</small></div></div><button class="area-send-btn" ${available?'':'disabled'} onclick="createAreaCatalog('${S.js(d)}')">📤 Gửi cả khu vực</button></div>${list.map(roomCard).join('')}</section>`;
     }).join('');
     return shell('Kho phòng','Chọn từng phòng hoặc gửi toàn bộ phòng trống theo khu vực',`
-      <div class="search-row"><input class="search" placeholder="Mã phòng, đường, khu vực…" value="${esc(state.query)}" oninput="state.query=this.value;render()"><button class="icon-btn" onclick="openFilter()">⚙</button></div>
+      <div class="search-row"><input class="search" placeholder="Mã phòng, đường, khu vực…" value="${esc(state.query)}" oninput="state.query=this.value;render()"><button class="icon-btn filter-icon-btn" onclick="openFilter()" aria-label="Bộ lọc" title="Bộ lọc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg></button></div>
       <div class="room-sticky-filters"><div class="area-chips"><button class="area-chip ${!state.filters.district?'active':''}" onclick="state.filters.district='';render()">Tất cả khu vực</button>${areas.map(d=>`<button class="area-chip ${state.filters.district===d?'active':''}" onclick="state.filters.district='${esc(d)}';render()">📍 ${esc(d)}</button>`).join('')}</div><div class="tabs">${[['ALL','Tất cả'],['AVAILABLE','Trống'],['COMING_SOON','Sắp trống'],['HOLD','Đang giữ'],['DEPOSITED','Đã cọc'],['RENTED','Đã thuê']].map(([k,l])=>`<button class="tab ${state.roomStatus===k?'active':''}" onclick="state.roomStatus='${k}';render()">${l}</button>`).join('')}</div><div class="filter-summary"><span><b>${rooms.length}</b> phòng${state.filters.district?` · ${esc(state.filters.district)}`:''}</span><button onclick="clearRoomFilters()">Xóa lọc</button></div></div>
       ${groupHtml||empty('Không có phòng phù hợp bộ lọc')}
       ${selected?`<div class="selection-bar"><div><b>${selected} phòng</b><span>đã chọn</span></div><button class="btn ghost" onclick="clearSelected()">Bỏ chọn</button><button class="btn primary" onclick="createCatalogFromSelected()">Tạo catalog</button></div>`:''}
       ${canManage()?'<button class="fab" onclick="newRoom()" aria-label="Thêm phòng">+</button>':''}
-    `,`<button class="top-action" onclick="openFilter()">Bộ lọc</button>`);
+    `,` `);
   };
 
   roomCard=function(r0){
