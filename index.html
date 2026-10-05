@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0f766e" />
   <meta name="description" content="SaleRoom - Kho phòng và CRM mobile cho đội Sale" />
   <title>SaleRoom - Kho phòng & CRM</title>
-  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/icon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="https://qvistojgyvnaqewiwxvv.supabase.co/storage/v1/object/public/saleroom-web/styles.css" />
 </head>
@@ -22,5 +22,10 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://qvistojgyvnaqewiwxvv.supabase.co/storage/v1/object/public/saleroom-web/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(() => {}));
+    }
+  </script>
 </body>
 </html>
