@@ -1,0 +1,43 @@
+/* SaleRoom v8 optimization UI */
+.upload-progress-card{
+  position:fixed;left:50%;bottom:max(92px,calc(env(safe-area-inset-bottom) + 86px));
+  transform:translate(-50%,18px);width:min(calc(100% - 24px),520px);z-index:260;
+  background:rgba(255,255,255,.98);border:1px solid #fdba74;border-radius:18px;
+  box-shadow:0 18px 48px rgba(124,45,18,.22);padding:12px 13px;
+  opacity:0;pointer-events:none;transition:.18s ease;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+.upload-progress-card.show{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.upload-progress-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.upload-progress-head>div{min-width:0}
+.upload-progress-head b{display:block;color:#7c2d12;font-size:12px}
+.upload-progress-head span{display:block;color:#8a7567;font-size:9px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:340px}
+.upload-progress-head strong{color:#ea580c;font-size:15px}
+.upload-progress-track{height:8px;background:#ffedd5;border-radius:999px;overflow:hidden;margin-top:9px}
+.upload-progress-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f97316,#fb923c);border-radius:999px;transition:width .16s linear}
+.upload-progress-actions{display:flex;justify-content:flex-end;margin-top:8px}
+.upload-progress-actions button{border:1px solid #fdba74;background:#fff7ed;color:#9a3412;border-radius:9px;padding:6px 9px;font-size:9px;font-weight:850}
+
+.room-duplicate-warning{display:none;margin:-3px 0 10px;padding:8px 9px;border-radius:10px;background:#fff1f2;border:1px solid #fecaca;color:#b91c1c;font-size:10px;line-height:1.4}
+.room-duplicate-warning.show{display:block}
+.room-duplicate-warning.ok{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+
+.media-order-actions{display:flex;gap:5px;margin-top:7px}
+.media-order-actions button{width:30px;height:28px;border:1px solid #fdba74;background:#fff;color:#c2410c;border-radius:8px;font-size:14px;font-weight:900}
+.media-order-actions button:disabled{opacity:.3}
+.order-badge{position:absolute;left:6px;top:6px;padding:4px 6px;border-radius:999px;background:rgba(43,23,8,.76);color:#fff;font-size:8px;font-weight:900}
+
+.excel-mode-note{padding:10px 11px;border-radius:11px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:10px;line-height:1.45;margin-bottom:12px}
+.cleanup-card{border-color:#fed7aa!important}
+.cleanup-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border:1px solid #fed7aa;background:#fff7ed;border-radius:13px;margin-bottom:10px}
+.cleanup-summary b{font-size:12px;color:#7c2d12}.cleanup-summary span{font-size:12px;color:#ea580c;font-weight:900}
+.orphan-list{max-height:300px;overflow:auto;border:1px solid #fed7aa;border-radius:12px;margin:10px 0 14px}
+.orphan-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border-bottom:1px solid #ffedd5}
+.orphan-row:last-child{border-bottom:0}.orphan-row span{font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.orphan-row b{font-size:9px;color:#ea580c;white-space:nowrap}
+
+.public-video-card video[poster],.video-item video[poster]{object-fit:cover}
+
+@media(max-width:420px){
+  .upload-progress-card{bottom:max(84px,calc(env(safe-area-inset-bottom) + 80px));width:calc(100% - 16px);padding:11px}
+  .upload-progress-head span{max-width:230px}
+}
