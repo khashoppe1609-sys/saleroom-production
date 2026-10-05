@@ -58,7 +58,7 @@
     if(!window.XLSX)return toast('Thư viện Excel chưa tải xong');
     const rows=[
       ['Khu vực','Tên phòng','Số phòng','Tầng','Loại phòng','Mô tả','Giá thuê','Tiền cọc','Điện','Nước','Dịch vụ','Gửi xe','Internet','Diện tích m2','Nội thất','Số người','Số xe','Máy giặt','Thú cưng','Tiện ích','Ngày có phòng','Trạng thái','Hợp đồng tháng','Hoa hồng','Thưởng','Ghi chú nội bộ'],
-      ['Quận 7','Studio ban công','P.302','Tầng 3','Studio','Phòng sáng, full nội thất',5500000,5500000,'4.000đ/kWh','100.000đ/người','200.000đ/phòng','150.000đ/xe','Miễn phí',28,'Full nội thất',2,2,'Riêng','Cho mèo nhỏ','Máy lạnh, Tủ lạnh, Bếp',todayISO(),'Trống',12,'50% tháng đầu',0,'']
+      ['Quận 7','Studio đẹp','P.302','Tầng 3','Studio','Phòng sáng, full nội thất',5500000,5500000,'4.000đ/kWh','100.000đ/người','200.000đ/phòng','150.000đ/xe','Miễn phí',28,'Full nội thất',2,2,'Riêng','Cho mèo nhỏ','Máy lạnh, Tủ lạnh, Bếp',todayISO(),'Trống',12,'50% tháng đầu',0,'']
     ];
     const ws=XLSX.utils.aoa_to_sheet(rows);
     ws['!cols']=rows[0].map((x,i)=>({wch:Math.min(28,Math.max(12,String(x).length+4))}));
