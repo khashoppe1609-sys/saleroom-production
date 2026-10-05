@@ -13,3 +13,5 @@ html,body,.app-shell,.public-shell,.center-page,.auth-bg{background:#fffaf5!impo
 .sheet .field label{color:#7c2d12!important}
 .sheet .field input::placeholder,.sheet .field textarea::placeholder{color:#b8a091}
 @media(max-width:420px){.sheet .grid2{grid-template-columns:1fr}.inline-field{grid-template-columns:1fr auto}.form-section-title{top:-1px}}
+
+/* sync-ready */
