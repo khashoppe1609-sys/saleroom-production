@@ -174,7 +174,7 @@ body.sr-tablet .bottom-nav{width:min(calc(100% - 32px),760px)!important}
 /* DESKTOP: true desktop layout */
 body.sr-desktop{
   background:#f4efe9;
-  min-width:1100px;
+  min-width:900px;
 }
 body.sr-desktop .app-shell{
   width:min(100%,1440px)!important;
