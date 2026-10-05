@@ -55,7 +55,12 @@
       <div class="grid2"><div class="field"><label>Hoa hồng</label><input id="rcommission" placeholder="Ví dụ: 50% tháng đầu / 3 triệu"></div><div class="field"><label>Thưởng thêm</label><input id="rbonus" type="number" inputmode="numeric" placeholder="0"></div></div>
       <div class="field"><label>Ghi chú nội bộ</label><textarea id="rnote" placeholder="Thông tin chủ nhà, lưu ý dẫn khách, điều kiện đặc biệt..."></textarea></div>
 
-      <div class="form-help">Các ô không bắt buộc có thể để trống. Sau khi tạo phòng, bạn có thể mở phòng để upload ảnh.</div>
+      <h3 class="form-section-title">🖼 Ảnh & video phòng</h3>
+      <div class="create-media-grid">
+        <label class="create-media-picker"><b>🖼 Chọn ảnh phòng</b><span id="r-images-count">Chưa chọn ảnh</span><input id="r-images" type="file" accept="image/*" multiple hidden onchange="document.querySelector('#r-images-count').textContent=this.files.length+' ảnh đã chọn'"></label>
+        <label class="create-media-picker"><b>🎬 Chọn video phòng</b><span id="r-video-count">Chưa chọn video</span><input id="r-video" type="file" accept="video/*" hidden onchange="document.querySelector('#r-video-count').textContent=this.files.length?'1 video đã chọn':'Chưa chọn video'"></label>
+      </div>
+      <div class="form-help">Ảnh đầu tiên bạn chọn sẽ là ảnh đại diện. Có thể đổi ảnh đại diện sau. Video luôn nằm sau toàn bộ ảnh và được nén mạnh trước khi upload.</div>
       <div class="sheet-actions"><button class="btn ghost" onclick="closeSheet()">Hủy</button><button class="btn primary" onclick="saveRoom()">Lưu phòng</button></div>`);
   };
 
@@ -109,8 +114,14 @@
         bonus:val('#rbonus')?Number(val('#rbonus')):0,
         internal_note:val('#rnote').trim()||null
       };
-      const {error}=await client.from('rooms').insert({...data,organization_id:state.profile.organization_id,created_by:state.profile.id,updated_by:state.profile.id}); if(error) throw error;
-      closeSheet(); state.tab='rooms'; await hydrate(); toast('Đã thêm phòng');
+      const imageFiles=[...(document.querySelector('#r-images')?.files||[])];
+      const videoFiles=[...(document.querySelector('#r-video')?.files||[])];
+      const {data:created,error}=await client.from('rooms').insert({...data,organization_id:state.profile.organization_id,created_by:state.profile.id,updated_by:state.profile.id}).select('id').single(); if(error) throw error;
+      closeSheet(); state.tab='rooms'; await hydrate();
+      if(imageFiles.length) await uploadRoomImages(created.id,imageFiles);
+      if(videoFiles.length) await uploadRoomVideo(created.id,videoFiles);
+      if(!imageFiles.length&&!videoFiles.length) toast('Đã thêm phòng');
+      else toast('Đã thêm phòng và media',4500);
     }catch(e){toast(errMessage(e),4500)}finally{setLoading(false)}
   };
 })();
