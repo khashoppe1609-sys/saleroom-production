@@ -15,3 +15,19 @@ html,body,.app-shell,.public-shell,.center-page,.auth-bg{background:#fffaf5!impo
 @media(max-width:420px){.sheet .grid2{grid-template-columns:1fr}.inline-field{grid-template-columns:1fr auto}.form-section-title{top:-1px}}
 
 /* sync-ready */
+
+/* v4 catalog compact grid */
+.public-area-section{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;align-items:start}
+.public-area-section>.area-heading{grid-column:1/-1;margin-bottom:1px!important}
+.public-area-section>.public-room{margin:0!important;min-width:0}
+.public-room .public-photo{height:132px!important}
+.public-room .public-room-body{padding:10px!important}
+.public-room .public-room-head{display:block!important}
+.public-room .public-room-head .price{margin-top:5px!important;font-size:15px!important}
+.public-room h2{font-size:13px!important;line-height:1.28!important;margin-bottom:4px!important}
+.public-room .public-facts{display:flex!important;flex-direction:column!important;gap:3px!important}
+.public-room .public-facts span{font-size:10px!important}
+.public-room .feedback-row{display:none!important}
+.public-room .public-card-hint{font-size:10px!important;margin-top:7px!important}
+.public-description{white-space:pre-wrap;line-height:1.5;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px 11px;margin:10px 0;color:#7c2d12;font-size:12px}
+@media(max-width:360px){.public-area-section{gap:7px}.public-room .public-photo{height:112px!important}.public-room .public-room-body{padding:8px!important}}
