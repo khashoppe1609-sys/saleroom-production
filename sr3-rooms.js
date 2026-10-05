@@ -57,9 +57,10 @@
 
       <h3 class="form-section-title">🖼 Ảnh & video phòng</h3>
       <div class="create-media-grid">
-        <label class="create-media-picker"><b>🖼 Chọn ảnh phòng</b><span id="r-images-count">Chưa chọn ảnh</span><input id="r-images" type="file" accept="image/*" multiple hidden onchange="document.querySelector('#r-images-count').textContent=this.files.length+' ảnh đã chọn'"></label>
-        <label class="create-media-picker"><b>🎬 Chọn video phòng</b><span id="r-video-count">Chưa chọn video</span><input id="r-video" type="file" accept="video/*" hidden onchange="document.querySelector('#r-video-count').textContent=this.files.length?'1 video đã chọn':'Chưa chọn video'"></label>
+        <label class="create-media-picker"><b>🖼 Chọn ảnh phòng</b><span id="r-images-count">Chưa chọn ảnh</span><input id="r-images" type="file" accept="image/*" multiple hidden onchange="SR11.previewRoomImages(this.files)"></label>
+        <label class="create-media-picker"><b>🎬 Chọn video phòng</b><span id="r-video-count">Chưa chọn video</span><input id="r-video" type="file" accept="video/*" hidden onchange="SR11.previewRoomVideo(this.files?.[0])"></label>
       </div>
+      <div id="r-media-preview" class="create-media-preview" hidden></div>
       <div class="form-help">Ảnh đầu tiên bạn chọn sẽ là ảnh đại diện. Có thể đổi ảnh đại diện sau. Video luôn nằm sau toàn bộ ảnh và được nén mạnh trước khi upload.</div>
       <div class="sheet-actions"><button class="btn ghost" onclick="closeSheet()">Hủy</button><button class="btn primary" onclick="saveRoom()">Lưu phòng</button></div>`);
   };
