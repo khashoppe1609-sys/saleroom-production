@@ -81,6 +81,7 @@ window.SR11=window.SR11||{};
     const width=Math.round(window.visualViewport?.width||window.innerWidth||390);
     const coarse=window.matchMedia?.('(pointer: coarse)')?.matches===true;
     if(width<=767||(coarse&&width<=1024))return 'mobile';
+    if(!coarse&&width>=900)return 'desktop';
     if(width<1100)return 'tablet';
     return 'desktop';
   };
