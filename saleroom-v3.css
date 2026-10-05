@@ -31,3 +31,12 @@ html,body,.app-shell,.public-shell,.center-page,.auth-bg{background:#fffaf5!impo
 .public-room .public-card-hint{font-size:10px!important;margin-top:7px!important}
 .public-description{white-space:pre-wrap;line-height:1.5;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px 11px;margin:10px 0;color:#7c2d12;font-size:12px}
 @media(max-width:360px){.public-area-section{gap:7px}.public-room .public-photo{height:112px!important}.public-room .public-room-body{padding:8px!important}}
+
+/* v4 sync + wipe */
+.sync-floating{position:fixed;top:74px;right:max(12px,calc((100vw - 560px)/2 + 12px));z-index:28;border:1px solid #fdba74;background:#fff;color:#c2410c;border-radius:999px;padding:8px 11px;font-size:11px;font-weight:900;box-shadow:0 8px 20px rgba(124,45,18,.12)}
+.sync-floating:active{transform:translateY(1px)}
+.wipe-card{border-color:#fecaca!important;background:#fff!important}
+.wipe-card h3{color:#991b1b!important}
+.wipe-card .danger-soft,.sheet-actions .danger-soft{background:#fff1f2!important;border:1px solid #fecaca!important;color:#b91c1c!important}
+.detail-feedback{display:flex!important}
+@media(max-width:380px){.sync-floating span{display:none}.sync-floating{width:38px;height:38px;padding:0;font-size:18px}}
