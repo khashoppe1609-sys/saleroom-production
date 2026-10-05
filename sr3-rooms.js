@@ -21,7 +21,7 @@
 
   roomCard=function(r0){
     const r=normalizeRoom(r0),[label,cls]=STATUS[r.status]||[r.status,''],checked=state.selectedRoomIds.has(r.id),img=r.images?.[0],available=r.status==='AVAILABLE';
-    return `<article class="room-card ${checked?'selected':''}"><div class="room-media ${img?'has-image':''}" ${img?`style="background-image:url('${esc(img)}')"`:''}><div class="badges"><span class="badge ${cls}">${label}</span>${r.available_date===todayISO()?'<span class="badge">VÀO NGAY</span>':''}</div><label class="select-room"><input type="checkbox" ${checked?'checked':''} onchange="toggleRoomSelection('${r.id}')"><span>✓</span></label></div><div class="room-body"><div class="room-head"><div><div class="room-title">${esc(r.title||`${r.room_type||'Phòng'} ${r.room_number||''}`)}</div><div class="room-code">🔖 ${esc(r.code)}</div></div><div class="price">${money(r.price)}</div></div><div class="meta icon-meta"><span>📍 ${esc(r.district||'—')}</span><span>📐 ${esc(r.area||'—')}m²</span><span>🚪 ${esc(r.room_type||'—')}</span><span>🛋️ ${esc(r.furniture||'—')}</span></div><div class="tags"><span class="tag">🌤️ ${r.has_balcony?'Ban công':'Không ban công'}</span><span class="tag">🧺 ${esc(r.washer_type||'—')}</span><span class="tag">🐾 ${/cho|pet|mèo|meo|chó|cho/i.test(r.pet_policy||'')?'Cho pet':'Không pet'}</span></div><div class="room-tool-row"><button class="mini-tool" onclick="copyRoomInfo('${r.id}',event)">📋 Sao chép</button>${state.profile?.role==='admin'?`<button class="mini-tool danger" onclick="deleteRoom('${r.id}',event)">🗑 Xóa</button>`:''}</div><div class="actions"><button class="btn ghost small" onclick="openRoom('${r.id}')">Xem phòng</button>${available?`<button class="btn primary small" onclick="quickCatalog('${r.id}')">Gửi phòng này</button>`:`<button class="btn disabled small" disabled>Không thể gửi</button>`}</div></div></article>`;
+    return `<article class="room-card ${checked?'selected':''}"><div class="room-media ${img?'has-image':''}" ${img?`style="background-image:url('${esc(img)}')"`:''}><div class="badges"><span class="badge ${cls}">${label}</span>${r.available_date===todayISO()?'<span class="badge">VÀO NGAY</span>':''}</div><label class="select-room"><input type="checkbox" ${checked?'checked':''} onchange="toggleRoomSelection('${r.id}')"><span>✓</span></label></div><div class="room-body"><div class="room-head"><div><div class="room-title">${esc(r.title||`${r.room_type||'Phòng'} ${r.room_number||''}`)}</div><div class="room-code">🔖 ${esc(r.code)}</div></div><div class="price">${money(r.price)}</div></div><div class="meta icon-meta"><span>📍 ${esc(r.district||'—')}</span><span>📐 ${esc(r.area||'—')}m²</span><span>🚪 ${esc(r.room_type||'—')}</span><span>🛋️ ${esc(r.furniture||'—')}</span></div><div class="tags"><span class="tag">🧺 ${esc(r.washer_type||'—')}</span><span class="tag">🐾 ${/cho|pet|mèo|meo|chó|cho/i.test(r.pet_policy||'')?'Cho pet':'Không pet'}</span></div><div class="room-tool-row"><button class="mini-tool" onclick="copyRoomInfo('${r.id}',event)">📋 Sao chép</button>${state.profile?.role==='admin'?`<button class="mini-tool danger" onclick="deleteRoom('${r.id}',event)">🗑 Xóa</button>`:''}</div><div class="actions"><button class="btn ghost small" onclick="openRoom('${r.id}')">Xem phòng</button>${available?`<button class="btn primary small" onclick="quickCatalog('${r.id}')">Gửi phòng này</button>`:`<button class="btn disabled small" disabled>Không thể gửi</button>`}</div></div></article>`;
   };
 
   newRoom=function(){
@@ -45,7 +45,6 @@
       <div class="grid2"><div class="field"><label>Số người tối đa</label><input id="rpeople" type="number" inputmode="numeric" placeholder="2"></div><div class="field"><label>Số xe tối đa</label><input id="rbikes" type="number" inputmode="numeric" placeholder="2"></div></div>
       <div class="grid2"><div class="field"><label>Máy giặt</label><input id="rwasher" placeholder="Riêng, chung, không có..."></div><div class="field"><label>Chính sách thú cưng</label><input id="rpetpolicy" placeholder="Cho mèo/chó nhỏ, không pet..."></div></div>
       <div class="field"><label>Tiện ích</label><textarea id="ramenities" placeholder="Nhập tự do, ngăn cách bằng dấu phẩy hoặc xuống dòng&#10;Ví dụ: Máy lạnh, Tủ lạnh, Bếp, Khóa vân tay"></textarea></div>
-      <label class="check free-check"><input id="rbal" type="checkbox"> Có ban công</label>
 
       <h3 class="form-section-title">📅 Trạng thái & hợp đồng</h3>
       <div class="grid2"><div class="field"><label>Ngày có phòng</label><input id="ravail" type="date" value="${todayISO()}"></div><div class="field"><label>Trạng thái</label><select id="rstatus"><option value="AVAILABLE">Trống</option><option value="COMING_SOON">Sắp trống</option><option value="HOLD">Đang giữ</option><option value="DEPOSITED">Đã cọc</option><option value="RENTED">Đã thuê</option><option value="MAINTENANCE">Đang sửa</option></select></div></div>
@@ -57,8 +56,8 @@
 
       <h3 class="form-section-title">🖼 Ảnh & video phòng</h3>
       <div class="create-media-grid">
-        <label class="create-media-picker"><b>🖼 Chọn ảnh phòng</b><span id="r-images-count">Chưa chọn ảnh</span><input id="r-images" type="file" accept="image/*" multiple hidden onchange="SR11.previewRoomImages(this.files)"></label>
-        <label class="create-media-picker"><b>🎬 Chọn video phòng</b><span id="r-video-count">Chưa chọn video</span><input id="r-video" type="file" accept="video/*" hidden onchange="SR11.previewRoomVideo(this.files?.[0])"></label>
+        <label class="create-media-picker"><b>🖼 Chọn ảnh phòng</b><span id="r-images-count">Chưa chọn ảnh</span><input id="r-images" type="file" accept="image/*" multiple hidden></label>
+        <label class="create-media-picker"><b>🎬 Chọn video phòng</b><span id="r-video-count">Chưa chọn video</span><input id="r-video" type="file" accept="video/*" hidden></label>
       </div>
       <div id="r-media-preview" class="create-media-preview" hidden></div>
       <div class="form-help">Ảnh đầu tiên bạn chọn sẽ là ảnh đại diện. Có thể đổi ảnh đại diện sau. Video luôn nằm sau toàn bộ ảnh và được nén mạnh trước khi upload.</div>
@@ -101,7 +100,7 @@
         furniture:val('#rfurniture').trim()||null,
         amenities:cleanList,
         pet_policy:val('#rpetpolicy').trim()||null,
-        has_balcony:checked('#rbal'),
+        has_balcony:false,
         washer_type:val('#rwasher').trim()||null,
         electric_price:val('#relectric').trim()||null,
         water_price:val('#rwater').trim()||null,
