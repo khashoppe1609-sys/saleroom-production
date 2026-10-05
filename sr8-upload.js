@@ -149,41 +149,62 @@ window.SR8 = window.SR8 || {};
   });
 
   window.uploadRoomImages=async function(roomId,files){
-    const rawFiles=[...(files||[])].filter(f=>f.type.startsWith('image/'));
+    const rawFiles=[...(files||[])].filter(f=>f.type?.startsWith('image/'));
     if(!LIVE||!rawFiles.length)return;
     let inserted=0,originalBytes=0,finalBytes=0;
     try{
       const {data:existing,error:e0}=await client.from('room_images').select('id,sort_order').eq('room_id',roomId).order('sort_order');
       if(e0)throw e0;
       let order=(existing||[]).length;
+
       for(let i=0;i<rawFiles.length;i++){
         const raw=rawFiles[i];
         originalBytes+=raw.size;
-        O.showProgress('Đang nén ảnh '+(i+1)+'/'+rawFiles.length,Math.round(i/rawFiles.length*100),raw.name,false);
+        O.showProgress('Đang tối ưu ảnh '+(i+1)+'/'+rawFiles.length,Math.round(i/rawFiles.length*100),raw.name,false);
         const file=await M.compressImage(raw);
         finalBytes+=file.size;
-        const resumeKey=O.rawKey(roomId,raw,'image');
-        const path=O.getStablePath(roomId,file,'images',resumeKey);
-        await O.uploadResumable({
-          file,path,resumeKey,label:raw.name,
-          onProgress:p=>O.showProgress('Đang upload ảnh '+(i+1)+'/'+rawFiles.length,((i+p/100)/rawFiles.length)*100,Math.round(p)+'% · '+raw.name,true)
+
+        const safe=O.safeName(file.name);
+        const token=globalThis.crypto?.randomUUID?.()||Date.now()+'-'+Math.random().toString(36).slice(2);
+        const path=state.profile.organization_id+'/'+roomId+'/images/'+token+'-'+safe;
+
+        const basePct=i/rawFiles.length*100;
+        O.showProgress('Đang upload ảnh '+(i+1)+'/'+rawFiles.length,basePct,raw.name,false);
+        const {error:up}=await client.storage.from('room-media').upload(path,file,{
+          cacheControl:'31536000',
+          upsert:false,
+          contentType:file.type
         });
+        if(up)throw up;
+
+        O.showProgress('Đang lưu ảnh '+(i+1)+'/'+rawFiles.length,((i+.85)/rawFiles.length)*100,raw.name,false);
         const {data:urlData}=client.storage.from('room-media').getPublicUrl(path);
         const {error:db}=await client.from('room_images').insert({
-          organization_id:state.profile.organization_id,room_id:roomId,storage_path:path,
-          public_url:urlData.publicUrl,sort_order:order++,created_by:state.profile.id
+          organization_id:state.profile.organization_id,
+          room_id:roomId,
+          storage_path:path,
+          public_url:urlData.publicUrl,
+          sort_order:order++,
+          created_by:state.profile.id
         });
         if(db){await client.storage.from('room-media').remove([path]);throw db}
         inserted++;
+        O.showProgress('Đã thêm ảnh '+inserted+'/'+rawFiles.length,(inserted/rawFiles.length)*100,raw.name,false);
       }
-      O.showProgress('Hoàn tất ảnh',100,inserted+' ảnh',false);
-      await syncData(true);try{closeSheet()}catch{};openRoom(roomId);
+
+      await syncData(true);
+      try{closeSheet()}catch{}
+      openRoom(roomId);
       const saved=originalBytes?Math.max(0,Math.round((1-finalBytes/originalBytes)*100)):0;
       toast('Đã thêm '+inserted+' ảnh'+(saved?' · giảm khoảng '+saved+'% dung lượng':''),5000);
     }catch(e){
-      if(e?.message==='__UPLOAD_PAUSED__')toast('Đã tạm dừng. Chọn lại đúng file để tiếp tục upload.',5500);
-      else toast(errMessage(e),6000);
-    }finally{O.hideProgress();O.activeUpload=null;O.activeReject=null}
+      console.error('SaleRoom image upload failed',e);
+      toast('Không thêm được ảnh: '+errMessage(e),6500);
+    }finally{
+      O.hideProgress();
+      O.activeUpload=null;
+      O.activeReject=null;
+    }
   };
 
   window.uploadRoomVideo=async function(roomId,files){
