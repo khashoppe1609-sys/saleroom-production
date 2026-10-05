@@ -332,3 +332,56 @@ body.sr-desktop .public-room .price{font-size:18px!important}
   .app-shell,.content,.topbar{left:auto!important;right:auto!important;transform:none!important}
   .selected-video video{max-height:220px}
 }
+
+.pending-upload-preview{
+  margin-top:9px;
+  padding:9px;
+  border:1px solid #fed7aa;
+  border-radius:12px;
+  background:#fffaf5;
+}
+.pending-upload-preview>b{
+  display:block;
+  margin-bottom:7px;
+  color:#7c2d12;
+  font-size:10px;
+}
+.pending-upload-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;
+}
+.pending-upload-grid>div{
+  position:relative;
+  aspect-ratio:1/1;
+  overflow:hidden;
+  border-radius:9px;
+  background:#ffedd5;
+}
+.pending-upload-grid img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.pending-upload-grid span{
+  position:absolute;
+  left:4px;
+  bottom:4px;
+  padding:3px 5px;
+  border-radius:999px;
+  background:#f97316;
+  color:#fff;
+  font-size:7px;
+  font-weight:900;
+}
+.pending-upload-preview>video{
+  width:100%;
+  max-height:220px;
+  display:block;
+  border-radius:9px;
+  background:#130b07;
+}
+@media(max-width:420px){
+  .pending-upload-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
