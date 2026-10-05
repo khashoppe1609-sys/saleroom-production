@@ -21,7 +21,7 @@
       <div class="grid2"><div class="field"><label>Ngân sách từ</label><input id="cmin" type="number" inputmode="numeric"></div><div class="field"><label>Đến</label><input id="cmax" type="number" inputmode="numeric"></div></div>
       <div class="grid2"><div class="field"><label>Ngày dự kiến vào</label><input id="cmove" type="date"></div><div class="field"><label>Loại phòng cần</label><input id="ctypes" placeholder="Studio, 1PN..."></div></div>
       <div class="grid2"><div class="field"><label>Số người</label><input id="cpeople" type="number" inputmode="numeric"></div><div class="field"><label>Số xe</label><input id="cbikes" type="number" inputmode="numeric"></div></div>
-      <div class="check-grid"><label class="check"><input id="cpet" type="checkbox"> Có thú cưng</label><label class="check"><input id="cbal" type="checkbox"> Cần ban công</label><label class="check"><input id="cwash" type="checkbox"> Máy giặt riêng</label></div>
+      <div class="check-grid"><label class="check"><input id="cpet" type="checkbox"> Có thú cưng</label><label class="check"><input id="cwash" type="checkbox"> Máy giặt riêng</label></div>
       <div class="field"><label>Yêu cầu bắt buộc</label><input id="cmust" placeholder="Ví dụ: thang máy, cửa sổ, giờ giấc tự do"></div>
       <div class="field"><label>Ghi chú khách</label><textarea id="cnote" placeholder="Thông tin cần nhớ khi tư vấn…"></textarea></div>
       <h3 class="form-section-title">⏰ Nhắc chăm sóc</h3>
@@ -51,7 +51,7 @@
         move_in:val('#cmove')||null,
         people:val('#cpeople')?Number(val('#cpeople')):null,
         bikes:val('#cbikes')?Number(val('#cbikes')):null,
-        has_pet:checked('#cpet'),need_balcony:checked('#cbal'),need_private_washer:checked('#cwash'),
+        has_pet:checked('#cpet'),need_balcony:false,need_private_washer:checked('#cwash'),
         room_types:(val('#ctypes')||'').split(',').map(x=>x.trim()).filter(Boolean),
         must_have:(val('#cmust')||'').split(',').map(x=>x.trim()).filter(Boolean)
       };
@@ -76,7 +76,7 @@
       <div class="grid2"><div class="field"><label>Ngân sách từ</label><input id="ecmin" type="number" value="${esc(r.min_price||'')}"></div><div class="field"><label>Đến</label><input id="ecmax" type="number" value="${esc(r.max_price||'')}"></div></div>
       <div class="grid2"><div class="field"><label>Ngày dự kiến vào</label><input id="ecmove" type="date" value="${esc(r.move_in||'')}"></div><div class="field"><label>Loại phòng cần</label><input id="ectypes" value="${esc((r.room_types||[]).join(', '))}"></div></div>
       <div class="grid2"><div class="field"><label>Số người</label><input id="ecpeople" type="number" value="${esc(r.people||'')}"></div><div class="field"><label>Số xe</label><input id="ecbikes" type="number" value="${esc(r.bikes||'')}"></div></div>
-      <div class="check-grid"><label class="check"><input id="ecpet" type="checkbox" ${r.has_pet?'checked':''}> Có thú cưng</label><label class="check"><input id="ecbal" type="checkbox" ${r.need_balcony?'checked':''}> Cần ban công</label><label class="check"><input id="ecwash" type="checkbox" ${r.need_private_washer?'checked':''}> Máy giặt riêng</label></div>
+      <div class="check-grid"><label class="check"><input id="ecpet" type="checkbox" ${r.has_pet?'checked':''}> Có thú cưng</label><label class="check"><input id="ecwash" type="checkbox" ${r.need_private_washer?'checked':''}> Máy giặt riêng</label></div>
       <div class="field"><label>Yêu cầu bắt buộc</label><input id="ecmust" value="${esc((r.must_have||[]).join(', '))}"></div>
       <div class="field"><label>Ghi chú khách</label><textarea id="ecnote">${esc(c.note||'')}</textarea></div>
       <h3 class="form-section-title">⏰ Nhắc chăm sóc</h3>
@@ -104,7 +104,7 @@
         districts:(val('#ecd')||'').split(',').map(x=>x.trim()).filter(Boolean),
         min_price:val('#ecmin')?Number(val('#ecmin')):null,max_price:val('#ecmax')?Number(val('#ecmax')):null,
         move_in:val('#ecmove')||null,people:val('#ecpeople')?Number(val('#ecpeople')):null,bikes:val('#ecbikes')?Number(val('#ecbikes')):null,
-        has_pet:checked('#ecpet'),need_balcony:checked('#ecbal'),need_private_washer:checked('#ecwash'),
+        has_pet:checked('#ecpet'),need_balcony:false,need_private_washer:checked('#ecwash'),
         room_types:(val('#ectypes')||'').split(',').map(x=>x.trim()).filter(Boolean),
         must_have:(val('#ecmust')||'').split(',').map(x=>x.trim()).filter(Boolean),updated_at:new Date().toISOString()
       };
@@ -144,7 +144,6 @@
       <div class="grid2"><div class="field"><label>Số người tối đa</label><input id="erpeople" type="number" value="${esc(r.max_people||'')}"></div><div class="field"><label>Số xe tối đa</label><input id="erbikes" type="number" value="${esc(r.max_motorbike||'')}"></div></div>
       <div class="grid2"><div class="field"><label>Máy giặt</label><input id="erwasher" value="${esc(r.washer_type||'')}"></div><div class="field"><label>Chính sách thú cưng</label><input id="erpet" value="${esc(r.pet_policy||'')}"></div></div>
       <div class="field"><label>Tiện ích</label><textarea id="eramenities">${esc((r.amenities||[]).join(', '))}</textarea></div>
-      <label class="check free-check"><input id="erbal" type="checkbox" ${r.has_balcony?'checked':''}> Có ban công</label>
       <h3 class="form-section-title">📅 Trạng thái & hợp đồng</h3>
       <div class="grid2"><div class="field"><label>Ngày có phòng</label><input id="eravail" type="date" value="${esc(r.available_date||'')}"></div><div class="field"><label>Trạng thái</label><select id="erstatus">${statuses.map(([v,l])=>`<option value="${v}" ${v===r.status?'selected':''}>${l}</option>`).join('')}</select></div></div>
       <div class="field"><label>Hợp đồng (tháng)</label><input id="ercontract" type="number" value="${esc(r.contract_months||'')}"></div>
@@ -171,7 +170,7 @@
         water_price:val('#erwater').trim()||null,service_fee:val('#erservice').trim()||null,parking_fee:val('#erparking').trim()||null,
         internet_fee:val('#erinternet').trim()||null,area:val('#erarea')?Number(val('#erarea')):null,furniture:val('#erfurniture').trim()||null,
         max_people:val('#erpeople')?Number(val('#erpeople')):null,max_motorbike:val('#erbikes')?Number(val('#erbikes')):null,
-        washer_type:val('#erwasher').trim()||null,pet_policy:val('#erpet').trim()||null,amenities,has_balcony:checked('#erbal'),
+        washer_type:val('#erwasher').trim()||null,pet_policy:val('#erpet').trim()||null,amenities,has_balcony:false,
         available_date:val('#eravail')||null,status:val('#erstatus'),contract_months:val('#ercontract')?Number(val('#ercontract')):null,
         commission_note:val('#ercommission').trim()||null,bonus:val('#erbonus')?Number(val('#erbonus')):0,internal_note:val('#ernote').trim()||null,
         updated_by:state.profile.id,updated_at:new Date().toISOString()
@@ -181,7 +180,7 @@
     }catch(e){toast(errMessage(e),5000)}finally{setLoading(false)}
   };
 
-  S.historyLabels={title:'Tên phòng',room_number:'Số phòng',floor:'Tầng',room_type:'Loại phòng',description:'Mô tả',price:'Giá thuê',deposit:'Tiền cọc',area:'Diện tích',status:'Trạng thái',available_date:'Ngày có phòng',max_people:'Số người',max_motorbike:'Số xe',furniture:'Nội thất',amenities:'Tiện ích',pet_policy:'Thú cưng',has_balcony:'Ban công',washer_type:'Máy giặt',electric_price:'Điện',water_price:'Nước',service_fee:'Dịch vụ',parking_fee:'Gửi xe',internet_fee:'Internet',contract_months:'Hợp đồng',commission_note:'Hoa hồng',bonus:'Thưởng',internal_note:'Ghi chú nội bộ',area_id:'Khu vực'};
+  S.historyLabels={title:'Tên phòng',room_number:'Số phòng',floor:'Tầng',room_type:'Loại phòng',description:'Mô tả',price:'Giá thuê',deposit:'Tiền cọc',area:'Diện tích',status:'Trạng thái',available_date:'Ngày có phòng',max_people:'Số người',max_motorbike:'Số xe',furniture:'Nội thất',amenities:'Tiện ích',pet_policy:'Thú cưng',washer_type:'Máy giặt',electric_price:'Điện',water_price:'Nước',service_fee:'Dịch vụ',parking_fee:'Gửi xe',internet_fee:'Internet',contract_months:'Hợp đồng',commission_note:'Hoa hồng',bonus:'Thưởng',internal_note:'Ghi chú nội bộ',area_id:'Khu vực'};
   S.historySummary=function(h){
     const skip=new Set(['updated_at','updated_by','created_at','created_by','organization_id','building_id','code','deleted_at','deleted_by','deleted_prev_status']);
     const out=[];
