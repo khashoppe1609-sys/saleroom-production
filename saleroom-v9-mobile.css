@@ -289,6 +289,7 @@ body.sr-keyboard-open .selection-bar{visibility:hidden!important;pointer-events:
 .media-item{min-width:0}
 .video-item video{max-height:42dvh!important}
 .upload-progress-card{
+  z-index:380!important;
   bottom:calc(var(--sr-dock-space) + 6px)!important;
   max-height:calc(var(--sr-vvh) - 120px);
 }
