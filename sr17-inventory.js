@@ -53,6 +53,43 @@ window.SR17=window.SR17||{};
     toast('Đã áp dụng mẫu '+(b.name||'địa chỉ'),2500);
   };
 
+  T.refreshEditTemplateSelect=(preferred='')=>{
+    const areaId=val('#er-area');
+    const el=document.querySelector('#er-building-template');
+    if(!el)return;
+    const current=preferred||el.value||'';
+    el.innerHTML=T.templateOptions(areaId,current);
+    if(current&&[...el.options].some(o=>o.value===current))el.value=current;
+    T.updateEditTemplateHint(el.value);
+  };
+
+  T.updateEditTemplateHint=id=>{
+    const hint=document.getElementById('er-template-hint');
+    if(!hint)return;
+    const b=(state.buildings||[]).find(x=>x.id===id);
+    hint.innerHTML=b
+      ? '<b>📍 '+esc(b.name||'Mẫu địa chỉ')+'</b><span>'+esc(b.address||'Chưa nhập địa chỉ')+'</span>'
+      : '<span>Không dùng mẫu: phòng sẽ dùng địa chỉ nền của Khu vực.</span>';
+  };
+
+  T.applyEditBuildingTemplate=id=>{
+    T.updateEditTemplateHint(id);
+    const b=(state.buildings||[]).find(x=>x.id===id);
+    if(!b)return;
+    const set=(q,v)=>{const el=document.querySelector(q);if(el&&v!==null&&v!==undefined)el.value=Array.isArray(v)?v.join(', '):v};
+    set('#erelectric',b.default_electric_price);
+    set('#erwater',b.default_water_price);
+    set('#erservice',b.default_service_fee);
+    set('#erparking',b.default_parking_fee);
+    set('#erinternet',b.default_internet_fee);
+    set('#erfurniture',b.default_furniture);
+    set('#eramenities',b.default_amenities||b.amenities||[]);
+    set('#erwasher',b.default_washer_type);
+    set('#erpet',b.default_pet_policy);
+    set('#ercontract',b.default_contract_months);
+    toast('Đã áp dụng mẫu '+(b.name||'địa chỉ'),2200);
+  };
+
   T.captureRoomDraft=()=>{
     const ids=['r-area','r-building-template','rtitle','rnum','rfloor','rtype','rdesc','rprice','rdeposit','relectric','rwater','rservice','rparking','rinternet','rarea','rfurniture','rpeople','rbikes','rwasher','rpetpolicy','ramenities','ravail','rstatus','rcontract','rcommission','rbonus','rnote'];
     const out={};
