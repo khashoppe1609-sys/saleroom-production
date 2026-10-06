@@ -161,7 +161,19 @@ window.SR13=window.SR13||{};
     const prevOpenRoom=window.openRoom;
     window.openRoom=function(id){
       const out=prevOpenRoom(id);
-      requestAnimationFrame(removeBalconyTags);
+      requestAnimationFrame(()=>{
+        removeBalconyTags();
+        if(typeof canManage==='function' && canManage()){
+          const sheet=document.querySelector('#sheet-overlay .sheet')||document.querySelector('.sheet');
+          const cta=sheet?.querySelector('.sticky-cta');
+          if(sheet && cta && !sheet.querySelector('.room-detail-tools')){
+            const tools=document.createElement('div');
+            tools.className='room-detail-tools';
+            tools.innerHTML='<button type="button" class="btn clone-room-detail" onclick="duplicateRoom(\''+id+'\')">⧉ Nhân bản phòng này</button>';
+            cta.insertAdjacentElement('beforebegin',tools);
+          }
+        }
+      });
       return out;
     };
   }
