@@ -353,3 +353,213 @@ body.sr-desktop .public-area-section{grid-template-columns:repeat(2,minmax(0,1fr
 .media-upload-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .media-upload-btn{width:100%!important}
 @media(max-width:370px){.create-media-grid{grid-template-columns:1fr}}
+
+/* Final visual polish */
+body{
+  color:#3b2418;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.btn,.mini-tool,.icon-btn,.area-chip,.tab,.nav-item,.top-action,.create-media-picker{
+  border-radius:12px;
+}
+.btn,.mini-tool,.icon-btn,.area-chip,.tab,.nav-item,.create-media-picker{
+  transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease,background-color .12s ease;
+}
+@media(hover:hover){
+  .btn:hover,.mini-tool:hover,.icon-btn:hover,.area-chip:hover,.tab:hover,.create-media-picker:hover{transform:translateY(-1px)}
+}
+.field input,.field select,.field textarea,.search{
+  border-radius:13px!important;
+}
+.field input:focus,.field select:focus,.field textarea:focus,.search:focus{
+  outline:none!important;
+  border-color:#fb923c!important;
+  box-shadow:0 0 0 3px rgba(249,115,22,.12)!important;
+}
+.form-section-title{
+  margin:18px 0 10px!important;
+  color:#7c2d12!important;
+  font-size:13px!important;
+  letter-spacing:.01em;
+}
+.clone-room-banner{
+  margin:4px 0 14px;
+  padding:11px 12px;
+  border:1px solid #fdba74;
+  border-radius:14px;
+  background:linear-gradient(135deg,#fff7ed,#fff);
+}
+.clone-room-banner b{display:block;color:#c2410c;font-size:12px}
+.clone-room-banner span{display:block;margin-top:4px;color:#8a5a40;font-size:10px;line-height:1.45}
+.clone-room-btn,.clone-room-detail,.clone-next{
+  border-color:#fb923c!important;
+  background:#fff7ed!important;
+  color:#c2410c!important;
+  font-weight:850!important;
+}
+.room-detail-tools{
+  margin:12px 0;
+  padding:10px;
+  border:1px solid #ffedd5;
+  border-radius:14px;
+  background:#fffaf5;
+}
+.room-detail-tools .btn{width:100%;min-height:46px}
+.room-tool-row{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(94px,1fr))!important;
+  gap:7px!important;
+}
+.room-tool-row .mini-tool{
+  width:100%!important;
+  margin:0!important;
+  min-width:0!important;
+  min-height:42px!important;
+  padding:8px 7px!important;
+  white-space:normal!important;
+  line-height:1.2!important;
+}
+.actions{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.actions .btn{width:100%!important;margin:0!important;min-width:0!important;min-height:44px!important}
+.sheet-actions{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+}
+.sheet-actions .btn{width:100%!important;min-width:0!important}
+.sheet-actions.clone-actions .save-next-room{grid-column:1/-1}
+.sheet-actions.clone-actions{grid-template-columns:1fr 1fr!important}
+.sheet-head{gap:10px}
+.sheet-head>div:first-child{min-width:0}
+.sheet-head h2{overflow-wrap:anywhere}
+.sheet-head p{line-height:1.35}
+
+/* Mobile: stable app-like frame */
+body.sr-mobile .topbar{
+  box-shadow:0 1px 0 rgba(124,45,18,.06);
+}
+body.sr-mobile .bottom-nav{
+  border:1px solid rgba(251,146,60,.24)!important;
+}
+body.sr-mobile .nav-item.active{
+  background:#fff7ed!important;
+}
+body.sr-mobile .nav-item.active .nav-label{color:#ea580c!important;font-weight:900!important}
+body.sr-mobile .room-card,
+body.sr-mobile .list-card,
+body.sr-mobile .appointment-card,
+body.sr-mobile .settings-card,
+body.sr-mobile .profile-card{
+  border-radius:17px!important;
+}
+body.sr-mobile .room-sticky-filters{
+  box-shadow:0 8px 18px rgba(124,45,18,.04)!important;
+}
+body.sr-mobile .sheet{
+  max-height:min(94dvh,calc(var(--sr-vv-height,100dvh) - 4px))!important;
+  border-radius:22px 22px 0 0!important;
+}
+body.sr-mobile.sr-keyboard-open .sheet{
+  max-height:100%!important;
+  border-radius:0!important;
+}
+body.sr-mobile .sheet-head{
+  position:sticky!important;
+  top:0!important;
+  z-index:24!important;
+  background:rgba(255,255,255,.98)!important;
+}
+body.sr-mobile .sheet-actions,
+body.sr-mobile .sticky-cta{
+  position:sticky!important;
+  bottom:0!important;
+  background:rgba(255,255,255,.98)!important;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-top:1px solid #ffedd5!important;
+}
+body.sr-mobile .filter-summary{
+  min-height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+body.sr-mobile .filter-summary button{min-height:34px}
+body.sr-mobile .price{white-space:nowrap}
+body.sr-mobile .meta{gap:6px!important}
+body.sr-mobile .meta span{min-width:0;overflow-wrap:anywhere}
+body.sr-mobile .tags{gap:5px!important}
+body.sr-mobile .tag{max-width:100%;overflow-wrap:anywhere}
+body.sr-mobile .create-media-picker{min-height:82px}
+
+/* Tablet spacing */
+body.sr-tablet .content{
+  padding-bottom:110px!important;
+}
+body.sr-tablet .topbar{
+  position:sticky!important;
+  top:0!important;
+  z-index:60!important;
+  background:rgba(255,253,251,.98)!important;
+}
+body.sr-tablet .room-sticky-filters{position:sticky!important;top:74px!important;z-index:45!important}
+
+/* Desktop: true workspace, not stretched mobile */
+body.sr-desktop .app-shell{
+  position:relative!important;
+}
+body.sr-desktop .topbar{
+  border-radius:24px 24px 0 0!important;
+}
+body.sr-desktop .content{
+  max-width:none!important;
+}
+body.sr-desktop .room-sticky-filters{
+  z-index:44!important;
+}
+body.sr-desktop .room-card,
+body.sr-desktop .list-card,
+body.sr-desktop .appointment-card,
+body.sr-desktop .settings-card,
+body.sr-desktop .profile-card{
+  border-radius:17px!important;
+}
+body.sr-desktop .room-card{
+  box-shadow:0 8px 24px rgba(80,43,18,.06)!important;
+}
+body.sr-desktop .sheet{
+  box-shadow:0 28px 90px rgba(62,32,14,.22)!important;
+}
+body.sr-desktop .sheet-actions,
+body.sr-desktop .sticky-cta{
+  position:sticky!important;
+  bottom:0!important;
+  background:rgba(255,255,255,.98)!important;
+  border-top:1px solid #ffedd5!important;
+}
+body.sr-desktop .create-media-grid{
+  grid-template-columns:1fr 1fr!important;
+}
+body.sr-desktop .create-media-picker{
+  min-height:92px;
+}
+@media(min-width:1280px){
+  body.sr-desktop .area-section{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+  body.sr-desktop .area-section>.area-heading{grid-column:1/-1!important}
+}
+
+/* Keep customer/public content readable on large screens */
+body.sr-desktop .public-header>div,
+body.sr-desktop .public-content{
+  width:min(100%,1180px)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
