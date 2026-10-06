@@ -47,8 +47,8 @@
   };
 
   const prevNewRoom=window.newRoom;
-  window.newRoom=function(){
-    prevNewRoom();
+  window.newRoom=function(...args){
+    prevNewRoom(...args);
     setTimeout(()=>O.attachDuplicateWatcher('#r-area','#rnum'),50);
   };
 
@@ -59,12 +59,12 @@
   };
 
   const prevSaveRoom=window.saveRoom;
-  window.saveRoom=async function(){
+  window.saveRoom=async function(createNext=false){
     try{
       const areaId=val('#r-area'),number=val('#rnum').trim();
       const dup=await O.findDuplicateRoom(areaId,number);
       if(dup)return toast('Trùng số phòng: '+(dup.room_number||dup.title)+' đã có trong khu vực này',5500);
-      return await prevSaveRoom();
+      return await prevSaveRoom(createNext);
     }catch(e){toast(errMessage(e),5000)}
   };
 
