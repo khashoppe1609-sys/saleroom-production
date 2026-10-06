@@ -21,7 +21,7 @@ window.SR5 = window.SR5 || {};
 
   S.ensureRealtime=function(){
     if(!LIVE||!state.profile||S.channel) return;
-    const tables=['rooms','room_images','room_videos','customers','customer_requirements','appointments','room_holds','commissions','catalog_feedback','customer_care_notes','areas'];
+    const tables=['rooms','room_images','room_videos','customers','customer_requirements','appointments','room_holds','commissions','catalog_feedback','customer_care_notes','areas','buildings'];
     let ch=client.channel('saleroom-v5-live');
     for(const table of tables){
       ch=ch.on('postgres_changes',{event:'*',schema:'public',table},()=>{
