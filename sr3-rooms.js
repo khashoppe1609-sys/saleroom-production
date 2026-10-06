@@ -12,16 +12,16 @@
     }).join('');
     return shell('Kho phòng','Chọn từng phòng hoặc gửi toàn bộ phòng trống theo khu vực',`
       <div class="search-row"><input class="search" placeholder="Mã phòng, đường, khu vực…" value="${esc(state.query)}" oninput="state.query=this.value;render()"><button class="icon-btn filter-icon-btn" onclick="openFilter()" aria-label="Bộ lọc" title="Bộ lọc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg></button></div>
-      <div class="room-sticky-filters"><div class="area-chips"><button class="area-chip ${!state.filters.district?'active':''}" onclick="state.filters.district='';render()">Tất cả khu vực</button>${areas.map(d=>`<button class="area-chip ${state.filters.district===d?'active':''}" onclick="state.filters.district='${esc(d)}';render()">📍 ${esc(d)}</button>`).join('')}</div><div class="tabs">${[['ALL','Tất cả'],['AVAILABLE','Trống'],['COMING_SOON','Sắp trống'],['HOLD','Đang giữ'],['DEPOSITED','Đã cọc'],['RENTED','Đã thuê']].map(([k,l])=>`<button class="tab ${state.roomStatus===k?'active':''}" onclick="state.roomStatus='${k}';render()">${l}</button>`).join('')}</div><div class="filter-summary"><span><b>${rooms.length}</b> phòng${state.filters.district?` · ${esc(state.filters.district)}`:''}</span><button onclick="clearRoomFilters()">Xóa lọc</button></div></div>
+      <div class="room-sticky-filters"><div class="area-chips"><button class="area-chip ${!state.filters.district?'active':''}" onclick="state.filters.district='';render()">Tất cả khu vực</button>${areas.map(d=>`<button class="area-chip ${state.filters.district===d?'active':''}" onclick="state.filters.district='${esc(d)}';render()">📍 ${esc(d)}</button>`).join('')}</div><div class="tabs">${[['ALL','Tất cả'],['AVAILABLE','Trống'],['COMING_SOON','Sắp trống'],['HOLD','Đang giữ'],['DEPOSITED','Đã cọc'],['RENTED','Đã thuê']].map(([k,l])=>`<button class="tab ${state.roomStatus===k?'active':''}" onclick="state.roomStatus='${k}';render()">${l}</button>`).join('')}</div><div class="filter-summary"><span><b>${rooms.length}</b> phòng${state.filters.district?` · ${esc(state.filters.district)}`:''}</span><div class="filter-summary-actions">${SR17.staleCount()? `<button class="stale-filter-btn ${state.filters?.onlyStale?'active':''}" onclick="SR17.toggleStaleFilter()">⚠ ${SR17.staleCount()} cần xác minh</button>`:''}<button onclick="clearRoomFilters()">Xóa lọc</button></div></div></div>
       ${groupHtml||empty('Không có phòng phù hợp bộ lọc')}
-      ${selected?`<div class="selection-bar"><div><b>${selected} phòng</b><span>đã chọn</span></div><button class="btn ghost" onclick="clearSelected()">Bỏ chọn</button><button class="btn primary" onclick="createCatalogFromSelected()">Tạo catalog</button></div>`:''}
+      ${selected?`<div class="selection-bar"><div><b>${selected} phòng</b><span>đã chọn</span></div><button class="btn ghost" onclick="clearSelected()">Bỏ chọn</button>${canManage()?`<button class="btn bulk-room-btn" onclick="SR17.openBulkRoomUpdate()">Cập nhật</button>`:''}<button class="btn primary" onclick="createCatalogFromSelected()">Tạo catalog</button></div>`:''}
       ${canManage()?'<button class="fab" onclick="newRoom()" aria-label="Thêm phòng">+</button>':''}
     `,` `);
   };
 
   roomCard=function(r0){
     const r=normalizeRoom(r0),[label,cls]=STATUS[r.status]||[r.status,''],checked=state.selectedRoomIds.has(r.id),img=r.images?.[0],available=r.status==='AVAILABLE';
-    return `<article class="room-card ${checked?'selected':''}"><div class="room-media ${img?'has-image':''}" ${img?`style="background-image:url('${esc(img)}')"`:''}><div class="badges"><span class="badge ${cls}">${label}</span>${r.available_date===todayISO()?'<span class="badge">VÀO NGAY</span>':''}</div><label class="select-room"><input type="checkbox" ${checked?'checked':''} onchange="toggleRoomSelection('${r.id}')"><span>✓</span></label></div><div class="room-body"><div class="room-head"><div><div class="room-title">${esc(r.title||`${r.room_type||'Phòng'} ${r.room_number||''}`)}</div><div class="room-code">🔖 ${esc(r.code)}</div></div><div class="price">${money(r.price)}</div></div><div class="meta icon-meta"><span>📍 ${esc(r.district||'—')}</span><span>📐 ${esc(r.area||'—')}m²</span><span>🚪 ${esc(r.room_type||'—')}</span><span>🛋️ ${esc(r.furniture||'—')}</span></div><div class="tags"><span class="tag">🧺 ${esc(r.washer_type||'—')}</span><span class="tag">🐾 ${/cho|pet|mèo|meo|chó|cho/i.test(r.pet_policy||'')?'Cho pet':'Không pet'}</span></div><div class="room-tool-row">${canManage()?`<button class="mini-tool clone-room-btn" onclick="duplicateRoom('${r.id}',event)">⧉ Nhân bản</button>`:''}<button class="mini-tool" onclick="copyRoomInfo('${r.id}',event)">📋 Copy thông tin</button>${state.profile?.role==='admin'?`<button class="mini-tool danger" onclick="deleteRoom('${r.id}',event)">🗑 Xóa</button>`:''}</div><div class="actions"><button class="btn ghost small" onclick="openRoom('${r.id}')">Xem phòng</button>${available?`<button class="btn primary small" onclick="quickCatalog('${r.id}')">Gửi phòng này</button>`:`<button class="btn disabled small" disabled>Không thể gửi</button>`}</div></div></article>`;
+    return `<article class="room-card ${checked?'selected':''}"><div class="room-media ${img?'has-image':''}" ${img?`style="background-image:url('${esc(img)}')"`:''}><div class="badges"><span class="badge ${cls}">${label}</span>${r.available_date===todayISO()?'<span class="badge">VÀO NGAY</span>':''}${SR17.freshBadge(r0)}</div><label class="select-room"><input type="checkbox" ${checked?'checked':''} onchange="toggleRoomSelection('${r.id}')"><span>✓</span></label></div><div class="room-body"><div class="room-head"><div><div class="room-title">${esc(r.title||`${r.room_type||'Phòng'} ${r.room_number||''}`)}</div><div class="room-code">🔖 ${esc(r.code)}</div></div><div class="price">${money(r.price)}</div></div><div class="meta icon-meta"><span>📍 ${esc(r.district||'—')}</span><span>📐 ${esc(r.area||'—')}m²</span><span>🚪 ${esc(r.room_type||'—')}</span><span>🛋️ ${esc(r.furniture||'—')}</span></div><div class="tags"><span class="tag">🧺 ${esc(r.washer_type||'—')}</span><span class="tag">🐾 ${/cho|pet|mèo|meo|chó|cho/i.test(r.pet_policy||'')?'Cho pet':'Không pet'}</span></div>${SR17.freshRow(r0)}<div class="room-tool-row">${canManage()?`<button class="mini-tool clone-room-btn" onclick="duplicateRoom('${r.id}',event)">⧉ Nhân bản</button>`:''}<button class="mini-tool" onclick="copyRoomInfo('${r.id}',event)">📋 Copy thông tin</button>${state.profile?.role==='admin'?`<button class="mini-tool danger" onclick="deleteRoom('${r.id}',event)">🗑 Xóa</button>`:''}</div><div class="actions"><button class="btn ghost small" onclick="openRoom('${r.id}')">Xem phòng</button>${available?`<button class="btn primary small" onclick="quickCatalog('${r.id}')">Gửi phòng này</button>`:`<button class="btn disabled small" disabled>Không thể gửi</button>`}</div></div></article>`;
   };
 
   duplicateRoom=function(id,event){
@@ -38,6 +38,7 @@
       };
       const areaId=raw.area_id || state.areas?.find(a=>a.name===r.district)?.id || '';
       set('#r-area',areaId);
+      SR17.refreshTemplateSelect(raw.building_id);
       set('#rtitle','');
       set('#rnum','');
       set('#rfloor',raw.floor??r.floor);
@@ -88,7 +89,8 @@
     if(!state.areas?.length) return newArea();
     showSheet(`<div class="sheet-handle"></div><div class="sheet-head"><div><div class="eyebrow">KHO PHÒNG</div><h2>Thêm phòng</h2><p>Nhập thông tin phòng thực tế · mã nội bộ được tạo tự động</p></div><button onclick="closeSheet()">✕</button></div>
       <h3 class="form-section-title">📍 Vị trí & nhận diện</h3>
-      <div class="field"><label>Khu vực *</label><div class="inline-field"><select id="r-area">${state.areas.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select><button class="mini-add" type="button" onclick="newArea()">+ Khu vực</button></div></div>
+      <div class="field"><label>Khu vực *</label><div class="inline-field"><select id="r-area" onchange="SR17.refreshTemplateSelect()">${state.areas.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select><button class="mini-add" type="button" onclick="newArea()">+ Khu vực</button></div></div>
+      <div class="field building-template-field"><label>Mẫu địa chỉ / tòa nhà</label><div class="inline-field"><select id="r-building-template" onchange="SR17.applyBuildingTemplate(this.value)">${SR17.templateOptions(state.areas?.[0]?.id||'')}</select><button class="mini-add" type="button" onclick="SR17.newBuildingTemplate(val('#r-area'))">+ Mẫu</button></div><div id="r-template-hint" class="template-hint"><span>Chọn mẫu để tự điền điện, nước, dịch vụ, gửi xe, internet, nội thất…</span></div></div>
       <div class="grid2"><div class="field"><label>Tên phòng / tiêu đề</label><input id="rtitle" placeholder="Ví dụ: Studio full nội thất"></div><div class="field"><label>Số phòng</label><input id="rnum" placeholder="Ví dụ: P.302"></div></div>
       <div class="grid2"><div class="field"><label>Tầng</label><input id="rfloor" placeholder="Ví dụ: Tầng 3"></div><div class="field"><label>Loại phòng</label><input id="rtype" placeholder="Studio, 1PN, Duplex..."></div></div>
       <div class="field"><label>Mô tả gửi khách</label><textarea id="rdesc" placeholder="Mô tả điểm nổi bật của phòng, vị trí, ánh sáng, view..."></textarea></div>
@@ -135,9 +137,22 @@
     const code=`AUTO-${autoId}`;
     try{
       setLoading(true,'Đang lưu phòng…');
-      let building=state.buildings.find(b=>b.code===S.compatCode(areaId));
+      const templateId=val('#r-building-template');
+      let building=templateId?state.buildings.find(b=>b.id===templateId&&b.template_enabled===true):null;
+      if(!building) building=state.buildings.find(b=>b.code===S.compatCode(areaId));
       if(!building){
-        const {data,error}=await client.from('buildings').insert({organization_id:state.profile.organization_id,code:S.compatCode(areaId),name:area.name,address:area.name,city:area.city||'TP.HCM',district:area.name,amenities:[],created_by:state.profile.id}).select().single();
+        const {data,error}=await client.from('buildings').insert({
+          organization_id:state.profile.organization_id,
+          area_id:areaId,
+          template_enabled:false,
+          code:S.compatCode(areaId),
+          name:area.name,
+          address:area.name,
+          city:area.city||'TP.HCM',
+          district:area.name,
+          amenities:[],
+          created_by:state.profile.id
+        }).select().single();
         if(error) throw error; building=data;
       }
       const data={
@@ -171,7 +186,9 @@
         commission_value:null,
         commission_note:val('#rcommission').trim()||null,
         bonus:val('#rbonus')?Number(val('#rbonus')):0,
-        internal_note:val('#rnote').trim()||null
+        internal_note:val('#rnote').trim()||null,
+        last_verified_at:new Date().toISOString(),
+        verified_by:state.profile.id
       };
       const imageFiles=[...(document.querySelector('#r-images')?.files||[])];
       const videoFiles=[...(document.querySelector('#r-video')?.files||[])];
