@@ -86,7 +86,7 @@ window.SR8 = window.SR8 || {};
       const upload=new tus.Upload(file,{
         endpoint,
         retryDelays:[0,3000,5000,10000,20000],
-        headers:{authorization:'Bearer '+session.access_token},
+        headers:{authorization:'Bearer '+session.access_token,apikey:cfg.SUPABASE_PUBLISHABLE_KEY},
         uploadDataDuringCreation:true,
         removeFingerprintOnSuccess:true,
         storeFingerprintForResuming:true,
@@ -161,7 +161,13 @@ window.SR8 = window.SR8 || {};
         const raw=rawFiles[i];
         originalBytes+=raw.size;
         O.showProgress('Đang tối ưu ảnh '+(i+1)+'/'+rawFiles.length,Math.round(i/rawFiles.length*100),raw.name,false);
-        const file=await M.compressImage(raw);
+        let file;
+        try{file=await M.compressImage(raw)}
+        catch(err){
+          console.warn('Image compression fallback',err);
+          file=raw;
+        }
+        if(file.size>50*1024*1024)throw new Error('Ảnh vượt quá 50MB');
         finalBytes+=file.size;
 
         const safe=O.safeName(file.name);
@@ -214,9 +220,18 @@ window.SR8 = window.SR8 || {};
       const {count,error:cErr}=await client.from('room_videos').select('id',{count:'exact',head:true}).eq('room_id',roomId);
       if(cErr)throw cErr;if(Number(count||0)>=3)throw new Error('Mỗi phòng tối đa 3 video');
 
-      O.showProgress('Đang nén video siêu nhẹ',0,'480p · bỏ âm thanh',false);
-      const result=await M.compressVideo(raw);
+      O.showProgress('Đang tối ưu video',0,'Ưu tiên nén nhẹ · tự fallback nếu iPhone không hỗ trợ',false);
+      let result;
+      try{result=await M.compressVideo(raw)}
+      catch(err){
+        console.warn('Video compression fallback',err);
+        if(raw.size>50*1024*1024)throw new Error('Video này lớn hơn 50MB và thiết bị không nén được. Hãy cắt ngắn video rồi thử lại.');
+        let duration=null;
+        try{duration=(await M.getVideoMeta(raw)).duration||null}catch{}
+        result={file:raw,duration,compressed:false,originalSize:raw.size,fallback:true};
+      }
       const file=result.file;
+      if(file.size>50*1024*1024)throw new Error('Video sau tối ưu vẫn lớn hơn 50MB. Hãy cắt ngắn video rồi thử lại.');
       O.showProgress('Đang tạo ảnh xem trước',2,'Thumbnail video',false);
       let thumb=null;
       try{thumb=await O.makeVideoThumbnail(file)}catch(e){console.warn(e)}
@@ -298,7 +313,7 @@ window.SR8 = window.SR8 || {};
     const sheet=document.querySelector('.sheet');if(!sheet)return;
     const upload=sheet.querySelector('.upload-box');
     if(upload){
-      upload.innerHTML='<div class="media-upload-actions"><button type="button" class="btn ghost media-upload-btn" onclick="this.parentElement.querySelector(\'.room-media-image-input\').click()">🖼 Thêm ảnh</button><button type="button" class="btn primary media-upload-btn" onclick="this.parentElement.querySelector(\'.room-media-video-input\').click()">🎬 Thêm video</button><input class="room-media-image-input" type="file" accept="image/*" multiple hidden onchange="SR13.previewPendingMedia(this.files,this.closest(\'.upload-box\'),\'image\');requestAnimationFrame(()=>uploadRoomImages(\''+roomId+'\',this.files))"><input class="room-media-video-input" type="file" accept="video/*" hidden onchange="SR13.previewPendingMedia(this.files,this.closest(\'.upload-box\'),\'video\');requestAnimationFrame(()=>uploadRoomVideo(\''+roomId+'\',this.files))"></div><small>Ảnh số 1 là đại diện. Có thể đổi thứ tự. Ảnh được tối ưu rồi upload; video hỗ trợ tiếp tục khi mạng gián đoạn.</small>';
+      upload.innerHTML='<div class="media-upload-actions native-room-media"><div class="native-media-picker"><b>🖼 Thêm ảnh</b><input class="room-media-image-input" type="file" accept="image/*" multiple onchange="SR13.previewPendingMedia(this.files,this.closest(\'.upload-box\'),\'image\');setTimeout(()=>uploadRoomImages(\''+roomId+'\',this.files),50)"><span>Chọn ảnh từ thư viện</span></div><div class="native-media-picker"><b>🎬 Thêm video</b><input class="room-media-video-input" type="file" accept="video/*" onchange="SR13.previewPendingMedia(this.files,this.closest(\'.upload-box\'),\'video\');setTimeout(()=>uploadRoomVideo(\''+roomId+'\',this.files),50)"><span>Tối đa 50MB/file</span></div></div><small>Ảnh số 1 là đại diện. Ảnh dùng upload chuẩn; video lớn dùng resumable upload 6MB/chunk.</small>';
     }
     sheet.querySelector('.room-media-manager')?.remove();
     const section=document.createElement('section');section.className='room-media-manager';
