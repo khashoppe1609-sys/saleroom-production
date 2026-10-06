@@ -224,11 +224,13 @@ window.SR17=window.SR17||{};
     if(!ts)return 9999;
     return Math.max(0,Math.floor((Date.now()-new Date(ts).getTime())/T.DAY));
   };
-  T.isStale=room=>T.ageDays(room)>=14;
-  T.needsReview=room=>T.ageDays(room)>=7;
+  T.trackFreshness=room=>!['RENTED','HIDDEN'].includes(room?.status);
+  T.isStale=room=>T.trackFreshness(room)&&T.ageDays(room)>=14;
+  T.needsReview=room=>T.trackFreshness(room)&&T.ageDays(room)>=7;
   T.staleCount=()=> (state.rooms||[]).filter(r=>!r.deleted_at&&T.isStale(r)).length;
 
   T.freshBadge=room=>{
+    if(!T.trackFreshness(room))return '';
     const d=T.ageDays(room);
     if(d>=14)return '<span class="badge inventory-stale">⚠ CẦN XÁC MINH</span>';
     if(d>=7)return '<span class="badge inventory-warning">◷ NÊN KIỂM TRA</span>';
@@ -236,6 +238,7 @@ window.SR17=window.SR17||{};
   };
 
   T.freshRow=room=>{
+    if(!T.trackFreshness(room))return '';
     const d=T.ageDays(room);
     const label=d===0?'Hôm nay':d===1?'1 ngày trước':d+' ngày trước';
     const cls=d>=14?'stale':d>=7?'warning':'fresh';
