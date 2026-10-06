@@ -73,6 +73,11 @@
       if(head && !sheet.querySelector('.clone-room-banner')){
         head.insertAdjacentHTML('afterend','<div class="clone-room-banner"><b>⧉ Sao chép từ '+esc(r.room_number||r.title||r.code)+'</b><span>Khu vực, chi phí và tiện ích đã được điền sẵn. Ảnh/video không sao chép.</span></div>');
       }
+      const actions=sheet?.querySelector('.sheet-actions');
+      if(actions && !actions.querySelector('.save-next-room')){
+        actions.insertAdjacentHTML('afterbegin','<button class="btn clone-next save-next-room" onclick="saveRoom(true)">⧉ Lưu & tạo tiếp</button>');
+        actions.classList.add('clone-actions');
+      }
       document.querySelector('#rnum')?.scrollIntoView({block:'center',behavior:'smooth'});
       toast('Đã sao chép cấu hình phòng · nhập số phòng mới');
     });
@@ -120,7 +125,7 @@
       <div class="sheet-actions"><button class="btn ghost" onclick="closeSheet()">Hủy</button><button class="btn primary" onclick="saveRoom()">Lưu phòng</button></div>`);
   };
 
-  saveRoom=async function(){
+  saveRoom=async function(createNext=false){
     const areaId=val('#r-area');
     if(!areaId) return toast('Chọn khu vực');
     const area=state.areas.find(a=>a.id===areaId); if(!area) return toast('Khu vực không hợp lệ');
@@ -176,7 +181,11 @@
       closeSheet(); state.tab='rooms'; await hydrate();
       if(imageFiles.length) await uploadRoomImages(created.id,imageFiles);
       if(videoFiles.length) await uploadRoomVideo(created.id,videoFiles);
-      if(!imageFiles.length&&!videoFiles.length) toast('Đã thêm phòng');
+      if(createNext){
+        await hydrate();
+        duplicateRoom(created.id);
+        toast('Đã lưu phòng · nhập số phòng tiếp theo',5000);
+      }else if(!imageFiles.length&&!videoFiles.length) toast('Đã thêm phòng');
       else toast('Đã thêm phòng và media',4500);
     }catch(e){toast(errMessage(e),4500)}finally{setLoading(false)}
   };
