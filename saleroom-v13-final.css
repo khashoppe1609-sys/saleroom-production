@@ -563,3 +563,70 @@ body.sr-desktop .public-content{
   margin-left:auto!important;
   margin-right:auto!important;
 }
+
+/* v15 reliable native media controls */
+.native-media-grid,.native-room-media{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:9px!important;
+}
+.native-media-picker{
+  min-width:0;
+  padding:11px;
+  border:1px dashed #fb923c;
+  border-radius:14px;
+  background:#fff7ed;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.native-media-picker>b{font-size:12px;color:#9a3412}
+.native-media-picker>span{font-size:9px;color:#8a7567;line-height:1.35}
+.native-media-picker input[type="file"]{
+  display:block!important;
+  position:static!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  opacity:1!important;
+  visibility:visible!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  background:transparent!important;
+  font-size:12px!important;
+  color:#6b4b39!important;
+  overflow:hidden;
+}
+.native-media-picker input[type="file"]::file-selector-button{
+  min-height:40px;
+  margin-right:8px;
+  padding:8px 10px;
+  border:1px solid #fb923c;
+  border-radius:10px;
+  background:#fff;
+  color:#c2410c;
+  font-weight:850;
+  cursor:pointer;
+}
+.native-media-picker input[type="file"]::-webkit-file-upload-button{
+  min-height:40px;
+  margin-right:8px;
+  padding:8px 10px;
+  border:1px solid #fb923c;
+  border-radius:10px;
+  background:#fff;
+  color:#c2410c;
+  font-weight:850;
+}
+.pending-upload-preview{margin-top:10px;padding:9px;border:1px solid #fed7aa;border-radius:12px;background:#fff}
+.pending-upload-preview>b{display:block;margin-bottom:7px;font-size:10px;color:#7c2d12}
+.pending-upload-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.pending-upload-grid>div{position:relative;min-width:0}
+.pending-upload-grid img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:9px}
+.pending-upload-grid span{position:absolute;left:4px;bottom:4px;padding:3px 5px;border-radius:999px;background:#f97316;color:#fff;font-size:7px;font-weight:900}
+.pending-upload-preview video{width:100%;max-height:240px;border-radius:9px;background:#120a06}
+@media(max-width:420px){
+  .native-media-grid,.native-room-media{grid-template-columns:1fr!important}
+  .native-media-picker{padding:10px}
+}
