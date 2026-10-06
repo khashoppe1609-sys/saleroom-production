@@ -79,7 +79,7 @@ window.SR3 = window.SR3 || {};
       const {data:a,error}=await client.from('areas').insert({organization_id:state.profile.organization_id,name,city,created_by:state.profile.id}).select().single();
       if(error) throw error;
       const code=S.compatCode(a.id);
-      const {error:bErr}=await client.from('buildings').insert({organization_id:state.profile.organization_id,code,name,address:name,city,district:name,amenities:[],created_by:state.profile.id});
+      const {error:bErr}=await client.from('buildings').insert({organization_id:state.profile.organization_id,area_id:a.id,template_enabled:false,code,name,address:name,city,district:name,amenities:[],created_by:state.profile.id});
       if(bErr && !String(bErr.message||'').toLowerCase().includes('duplicate')) throw bErr;
       closeSheet();
       await hydrate();
