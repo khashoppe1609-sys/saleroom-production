@@ -130,7 +130,8 @@
     const areaId=raw.area_id||S?.areaForRoom?.(raw)?.id||'';
     const statuses=[['AVAILABLE','Trống'],['COMING_SOON','Sắp trống'],['HOLD','Đang giữ'],['DEPOSITED','Đã cọc'],['RENTED','Đã thuê'],['MAINTENANCE','Đang sửa'],['HIDDEN','Ẩn']];
     showSheet(`<div class="sheet-handle"></div><div class="sheet-head"><div><div class="eyebrow">CHỈNH SỬA PHÒNG</div><h2>${esc(r.title||r.room_number||'Phòng')}</h2></div><button onclick="closeSheet()">✕</button></div>
-      <div class="field"><label>Khu vực *</label><select id="er-area">${(state.areas||[]).map(a=>`<option value="${a.id}" ${a.id===areaId?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Khu vực *</label><select id="er-area" onchange="SR17.refreshEditTemplateSelect()">${(state.areas||[]).map(a=>`<option value="${a.id}" ${a.id===areaId?'selected':''}>${esc(a.name)}</option>`).join('')}</select></div>
+      <div class="field building-template-field"><label>Mẫu địa chỉ / tòa nhà</label><select id="er-building-template" onchange="SR17.applyEditBuildingTemplate(this.value)">${SR17.templateOptions(areaId,(state.buildings||[]).find(b=>b.id===raw.building_id&&b.template_enabled===true)?.id||'')}</select><div id="er-template-hint" class="template-hint">${(()=>{const b=(state.buildings||[]).find(x=>x.id===raw.building_id&&x.template_enabled===true);return b?`<b>📍 ${esc(b.name||'Mẫu địa chỉ')}</b><span>${esc(b.address||'')}</span>`:'<span>Không dùng mẫu: phòng đang dùng địa chỉ nền của Khu vực.</span>'})()}</div></div>
       <div class="grid2"><div class="field"><label>Tên phòng / tiêu đề</label><input id="ertitle" value="${esc(r.title||'')}"></div><div class="field"><label>Số phòng</label><input id="ernum" value="${esc(r.room_number||'')}"></div></div>
       <div class="grid2"><div class="field"><label>Tầng</label><input id="erfloor" value="${esc(r.floor||'')}"></div><div class="field"><label>Loại phòng</label><input id="ertype" value="${esc(r.room_type||'')}"></div></div>
       <div class="field"><label>Mô tả gửi khách</label><textarea id="erdesc">${esc(r.description||'')}</textarea></div>
@@ -157,9 +158,22 @@
     const areaId=val('#er-area');const area=(state.areas||[]).find(a=>a.id===areaId);if(!area)return toast('Chọn khu vực');
     try{
       setLoading(true,'Đang lưu phòng…');
-      let building=state.buildings.find(b=>b.code===window.SR3.compatCode(areaId));
+      const templateId=val('#er-building-template');
+      let building=templateId?state.buildings.find(b=>b.id===templateId&&b.template_enabled===true):null;
+      if(!building)building=state.buildings.find(b=>b.code===window.SR3.compatCode(areaId));
       if(!building){
-        const {data,error}=await client.from('buildings').insert({organization_id:state.profile.organization_id,code:window.SR3.compatCode(areaId),name:area.name,address:area.name,city:area.city||'TP.HCM',district:area.name,amenities:[],created_by:state.profile.id}).select().single();
+        const {data,error}=await client.from('buildings').insert({
+          organization_id:state.profile.organization_id,
+          area_id:areaId,
+          template_enabled:false,
+          code:window.SR3.compatCode(areaId),
+          name:area.name,
+          address:area.name,
+          city:area.city||'TP.HCM',
+          district:area.name,
+          amenities:[],
+          created_by:state.profile.id
+        }).select().single();
         if(error)throw error;building=data;
       }
       const amenities=(val('#eramenities')||'').split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);
@@ -173,7 +187,8 @@
         washer_type:val('#erwasher').trim()||null,pet_policy:val('#erpet').trim()||null,amenities,has_balcony:false,
         available_date:val('#eravail')||null,status:val('#erstatus'),contract_months:val('#ercontract')?Number(val('#ercontract')):null,
         commission_note:val('#ercommission').trim()||null,bonus:val('#erbonus')?Number(val('#erbonus')):0,internal_note:val('#ernote').trim()||null,
-        updated_by:state.profile.id,updated_at:new Date().toISOString()
+        updated_by:state.profile.id,updated_at:new Date().toISOString(),
+        last_verified_at:new Date().toISOString(),verified_by:state.profile.id
       };
       const {error}=await client.from('rooms').update(payload).eq('id',id);if(error)throw error;
       await syncData(true);openRoom(id);toast('Đã cập nhật phòng');
