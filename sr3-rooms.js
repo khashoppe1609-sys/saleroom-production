@@ -21,7 +21,61 @@
 
   roomCard=function(r0){
     const r=normalizeRoom(r0),[label,cls]=STATUS[r.status]||[r.status,''],checked=state.selectedRoomIds.has(r.id),img=r.images?.[0],available=r.status==='AVAILABLE';
-    return `<article class="room-card ${checked?'selected':''}"><div class="room-media ${img?'has-image':''}" ${img?`style="background-image:url('${esc(img)}')"`:''}><div class="badges"><span class="badge ${cls}">${label}</span>${r.available_date===todayISO()?'<span class="badge">VÀO NGAY</span>':''}</div><label class="select-room"><input type="checkbox" ${checked?'checked':''} onchange="toggleRoomSelection('${r.id}')"><span>✓</span></label></div><div class="room-body"><div class="room-head"><div><div class="room-title">${esc(r.title||`${r.room_type||'Phòng'} ${r.room_number||''}`)}</div><div class="room-code">🔖 ${esc(r.code)}</div></div><div class="price">${money(r.price)}</div></div><div class="meta icon-meta"><span>📍 ${esc(r.district||'—')}</span><span>📐 ${esc(r.area||'—')}m²</span><span>🚪 ${esc(r.room_type||'—')}</span><span>🛋️ ${esc(r.furniture||'—')}</span></div><div class="tags"><span class="tag">🧺 ${esc(r.washer_type||'—')}</span><span class="tag">🐾 ${/cho|pet|mèo|meo|chó|cho/i.test(r.pet_policy||'')?'Cho pet':'Không pet'}</span></div><div class="room-tool-row"><button class="mini-tool" onclick="copyRoomInfo('${r.id}',event)">📋 Sao chép</button>${state.profile?.role==='admin'?`<button class="mini-tool danger" onclick="deleteRoom('${r.id}',event)">🗑 Xóa</button>`:''}</div><div class="actions"><button class="btn ghost small" onclick="openRoom('${r.id}')">Xem phòng</button>${available?`<button class="btn primary small" onclick="quickCatalog('${r.id}')">Gửi phòng này</button>`:`<button class="btn disabled small" disabled>Không thể gửi</button>`}</div></div></article>`;
+    return `<article class="room-card ${checked?'selected':''}"><div class="room-media ${img?'has-image':''}" ${img?`style="background-image:url('${esc(img)}')"`:''}><div class="badges"><span class="badge ${cls}">${label}</span>${r.available_date===todayISO()?'<span class="badge">VÀO NGAY</span>':''}</div><label class="select-room"><input type="checkbox" ${checked?'checked':''} onchange="toggleRoomSelection('${r.id}')"><span>✓</span></label></div><div class="room-body"><div class="room-head"><div><div class="room-title">${esc(r.title||`${r.room_type||'Phòng'} ${r.room_number||''}`)}</div><div class="room-code">🔖 ${esc(r.code)}</div></div><div class="price">${money(r.price)}</div></div><div class="meta icon-meta"><span>📍 ${esc(r.district||'—')}</span><span>📐 ${esc(r.area||'—')}m²</span><span>🚪 ${esc(r.room_type||'—')}</span><span>🛋️ ${esc(r.furniture||'—')}</span></div><div class="tags"><span class="tag">🧺 ${esc(r.washer_type||'—')}</span><span class="tag">🐾 ${/cho|pet|mèo|meo|chó|cho/i.test(r.pet_policy||'')?'Cho pet':'Không pet'}</span></div><div class="room-tool-row">${canManage()?`<button class="mini-tool clone-room-btn" onclick="duplicateRoom('${r.id}',event)">⧉ Nhân bản</button>`:''}<button class="mini-tool" onclick="copyRoomInfo('${r.id}',event)">📋 Copy thông tin</button>${state.profile?.role==='admin'?`<button class="mini-tool danger" onclick="deleteRoom('${r.id}',event)">🗑 Xóa</button>`:''}</div><div class="actions"><button class="btn ghost small" onclick="openRoom('${r.id}')">Xem phòng</button>${available?`<button class="btn primary small" onclick="quickCatalog('${r.id}')">Gửi phòng này</button>`:`<button class="btn disabled small" disabled>Không thể gửi</button>`}</div></div></article>`;
+  };
+
+  duplicateRoom=function(id,event){
+    event?.stopPropagation?.();
+    if(!canManage()) return toast('Chỉ Manager/Admin được nhân bản phòng');
+    const raw=state.rooms.find(x=>x.id===id);
+    if(!raw) return toast('Không tìm thấy phòng để sao chép');
+    const r=normalizeRoom(raw);
+    newRoom();
+    requestAnimationFrame(()=>{
+      const set=(selector,value)=>{
+        const el=document.querySelector(selector);
+        if(el)el.value=value??'';
+      };
+      const areaId=raw.area_id || state.areas?.find(a=>a.name===r.district)?.id || '';
+      set('#r-area',areaId);
+      set('#rtitle','');
+      set('#rnum','');
+      set('#rfloor',raw.floor??r.floor);
+      set('#rtype',raw.room_type??r.room_type);
+      set('#rdesc',raw.description??r.description);
+      set('#rprice',raw.price??r.price);
+      set('#rdeposit',raw.deposit??r.deposit);
+      set('#relectric',raw.electric_price??r.electric_price);
+      set('#rwater',raw.water_price??r.water_price);
+      set('#rservice',raw.service_fee??r.service_fee);
+      set('#rparking',raw.parking_fee??r.parking_fee);
+      set('#rinternet',raw.internet_fee??r.internet_fee);
+      set('#rarea',raw.area??r.area);
+      set('#rfurniture',raw.furniture??r.furniture);
+      set('#rpeople',raw.max_people??r.max_people);
+      set('#rbikes',raw.max_motorbike??r.max_motorbike);
+      set('#rwasher',raw.washer_type??r.washer_type);
+      set('#rpetpolicy',raw.pet_policy??r.pet_policy);
+      set('#ramenities',(raw.amenities||r.amenities||[]).join(', '));
+      set('#ravail',todayISO());
+      set('#rstatus','AVAILABLE');
+      set('#rcontract',raw.contract_months??r.contract_months);
+      set('#rcommission',raw.commission_note??r.commission_note);
+      set('#rbonus',raw.bonus??r.bonus??0);
+      set('#rnote','');
+
+      const sheet=document.querySelector('#sheet-overlay .sheet')||document.querySelector('.sheet');
+      const head=sheet?.querySelector('.sheet-head');
+      const h2=head?.querySelector('h2');
+      const p=head?.querySelector('p');
+      if(h2)h2.textContent='Nhân bản phòng';
+      if(p)p.textContent='Đã sao chép cấu hình phòng · nhập số phòng mới rồi lưu';
+      if(head && !sheet.querySelector('.clone-room-banner')){
+        head.insertAdjacentHTML('afterend','<div class="clone-room-banner"><b>⧉ Sao chép từ '+esc(r.room_number||r.title||r.code)+'</b><span>Khu vực, chi phí và tiện ích đã được điền sẵn. Ảnh/video không sao chép.</span></div>');
+      }
+      document.querySelector('#rnum')?.scrollIntoView({block:'center',behavior:'smooth'});
+      toast('Đã sao chép cấu hình phòng · nhập số phòng mới');
+    });
   };
 
   newRoom=function(){
